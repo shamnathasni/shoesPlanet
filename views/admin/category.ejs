@@ -1,0 +1,57 @@
+<%- include("../layouts/adminLayout/header.ejs") %>
+<%- include("../layouts/adminLayout/navbar.ejs") %>
+
+<div class="col-md-9">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" />
+                        </div>
+                    </th>
+                    <!-- <th>ID</th> -->
+                    <th>Name</th>
+                   
+                    <!-- <th>Order</th> -->
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% categoriesData.forEach((category) => { %>
+                <tr>
+                    <td class="text-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" />
+                        </div>
+                    </td>
+                    <!-- <td><%= category.id %></td> -->
+                    <td><%= category.name %></td>
+                  
+                    <!-- <td><%= category.order %></td> -->
+                    <td class="text-end">
+
+                        <a href="/admin/editcategory/<%=category._id%>"><button type="button" class="btn btn-dark btn-icon-text">Edit</button></a>
+                        <!-- Add action buttons or links for each category here -->
+                        <% if(category.status===false){%>
+                            
+                            <div class="btn"><a href="/admin/list-category/<%= category._id %> " class="btn btn-success btn-small">list</a></div>
+                           
+                        <%}
+                        else{%>
+                            
+                            <div class="btn"><a href="/admin/Unlist-category/<%= category._id %> " class="btn btn-danger btn-small">Unlist</a></div>                       
+                            
+                        <%}%>
+                                                
+                    </td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<%- include("../layouts/adminLayout/footer.ejs") %>

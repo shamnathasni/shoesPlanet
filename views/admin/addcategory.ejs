@@ -1,0 +1,50 @@
+<%-include("../layouts/adminLayout/header.ejs")%>
+<%-include("../layouts/adminLayout/navbar.ejs")%>
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Categories</h2>
+            <p>Add category</p>
+        </div>
+        <div>
+            <input type="text" placeholder="Search Categories" class="form-control bg-white" />
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <form action="/admin/addcategory" method="post"  id="category-forum">
+               <div class="mb-4">
+                    <label for="product_name" class="form-label">Name</label>
+                    <input type="text" name="name" placeholder="Type here" class="form-control" id="category_name" />
+                    <div id="categoryError" class="text-danger"></div>
+                </div>
+                
+               
+                <div class="d-grid">
+                    <button class="btn btn-primary">Create category</button>
+                </div>
+            </form>
+        </div>
+    </div>    
+</section>
+ 
+
+
+<script>
+    const form = document.getElementById("category-forum");
+    const categoryNameInput = document.getElementById("category_name");
+    const errorElement = document.getElementById("categoryError");
+  
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const categoryName = categoryNameInput.value.trim();
+      if (categoryName === "") {
+        errorElement.textContent = "Category name is required.";
+        return;
+      }
+    })
+</script>
+
+<%-include("../layouts/adminLayout/header.ejs")%>

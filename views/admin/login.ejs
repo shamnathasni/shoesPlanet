@@ -1,0 +1,65 @@
+<%-include("../layouts/adminLayout/header.ejs")%>
+
+<main>
+    <header style="display: flex; justify-content: center;" class="main-header style-2 navbar">
+        <div class="col-brand">
+           
+                <a class="navbar-brand" href="index.html"><b><span style="font-weight: 800;">S</span>hoes<span style="font-weight: 800;">P</span>alnet</b></a>
+         
+        </div>
+        
+    </header>
+
+
+    <section class="content-main mt-80 mb-80">
+        <div class="card mx-auto card-login">
+            <div class="card-body">
+                <h4 class="card-title mb-4"> Login</h4>
+                <form action="/admin/login" method="post">
+                    <div class="mb-3">
+                        <input class="form-control" name="email" placeholder="Username or email" type="text" />
+                    </div>
+                    <!-- form-group// -->
+                    <div class="mb-3">
+                        <input class="form-control" name="password" placeholder="Password" type="password" />
+                    </div>
+                    <!-- form-group// -->
+                    <div class="mb-3">
+                        <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input" checked="" />
+                            <span class="form-check-label">Remember</span>
+                        </label>
+                    </div>
+                    <!-- form-group form-check .// -->
+                    <div class="mb-4">
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </div>
+                    <!-- form-group// -->
+                </form>
+                
+    <%
+
+if(typeof message !=="undefined"){
+    %>
+
+    <p style="color: darkred;"><%-message %></p>
+
+    <%
+
+}
+
+%>
+    <footer class="main-footer text-center">
+        <p class="font-xs">
+            <script>
+                document.write(new Date().getFullYear());
+            </script>
+            &copy; Nest - HTML Ecommerce Template .
+        </p>
+        <p class="font-xs mb-30">All rights reserved</p>
+    </footer>
+
+
+
+<%-include("../layouts/adminLayout/footer.ejs")%>

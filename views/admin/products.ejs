@@ -1,0 +1,128 @@
+<%- include("../layouts/adminLayout/header.ejs") %>
+<%- include("../layouts/adminLayout/navbar.ejs") %>
+<style>
+    .pagination {
+      display: inline-block;
+    }
+    
+    .pagination a {
+      color: black;
+      float: left;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+    
+    .pagination a.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .pagination a:hover:not(.active) {background-color: #ddd;}
+    </style>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Products List</h2>
+            <p>Lorem ipsum dolor sit amet.</p>
+        </div>
+        <div>
+            <a href="#" class="btn btn-light rounded font-md">Export</a>
+            <a href="#" class="btn btn-light rounded font-md">Import</a>
+            <a href="/admin/addproduct" class="btn btn-primary btn-sm rounded">Create new</a>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row align-items-center">
+                <!-- Table header content -->
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th> </th>
+                                <th> name </th>
+                                <th> category </th>
+                                <th> description </th>
+                                <th> price </th>
+                                <th> availability </th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% productData.forEach((product) => { %>
+                                <tr>
+                                   
+                                    <!-- Product Name -->
+                                    <td class="col-name">
+                                        <a class="itemside" >
+                                            <div class="left">
+                                                <img src="/productImages/<%=product.image[0] %>" class="img-sm img-thumbnail"  alt="Item" />
+                                            </div>
+                                            <div class="info">
+                                                <h3 class="mb-0"><%= product.name %></h3>
+                                            </div>
+                                        </a>
+                                    <td class="col-status">
+                                        <span class="badge rounded-pill alert-success"><%= product.category.name %></span>
+                                    </td>
+                                    <td class="description-cell">
+                                        <div class="description-content">
+                                         <h4 class="mb-0"> <%= product.description %></h4>
+                                        </div>
+                                       
+                                    </td>
+                                    <!-- Product Price -->
+                                    <td class="col-price"><span><%= product.price %></span></td>
+                                    <!-- Product Status -->
+                                    <td class="col-status">
+                                       <h5 class="mb-0"><%= product.availability %></h5> 
+                                    </td>
+                                    <td class="text-end">
+                                        
+                                        <a href="/admin/editproduct/<%=product.id%>"><button type="button" class="btn btn-primary btn-icon-text">Edit</button></a>
+                                        
+                                        <%if(product.status===false) {%>
+
+                                            <a href="/admin/restore-product/<%=product._id%>"><button type="button" class="btn btn-dark btn-icon-text">restore</button></a>
+
+                                        
+                                        <%}
+                                        else{%>
+                                            <a href="/admin/delete-product/<%=product._id%>"><button type="button" class="btn btn-dark btn-icon-text">delete</button></a>
+                                            
+                                        <%}%>
+                                                                       
+                                    </td>                     
+                                </tr>    
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>   
+                <div class="col text-center pagination d-flex justify-content-center">
+		            <div class="block-27">
+		              <ul>
+                    <% if( currentPage !== 1 ) { %> 
+                        <a href="/admin/products?page=1">1</a>
+                    <% } %>
+                    
+                    <% if( currentPage > 2 ) { %>
+                        <a href="/admin/products?page=<%= previousPage %>"><%= previousPage %></a> 
+                    <% } %>
+                    <a href="/admin/products?page=<%= currentPage %>" class="active"><%= currentPage %></a>
+                    <% if( hasNextpage ) { %>
+                        <a href="/admin/products?page=<%= nextPage %>"><%= nextPage %></a> 
+                    <% } %>
+                    <% if( (lastPage - currentPage > 2) ){ %>
+                        
+                    <% } %>    
+                    <% if( nextPage !== lastPage && currentPage !== lastPage ) { %>
+                        <a href="/admin/products?page=<%= lastPage %>d %>"><%= lastPage %></a>
+                    <% } %>
+                      </ul>
+                 </div>                
+            </div>
+        </header>        
+</section>
+
+<%- include("../layouts/adminLayout/footer.ejs") %>

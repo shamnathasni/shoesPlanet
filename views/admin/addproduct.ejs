@@ -1,0 +1,109 @@
+<%-include("../layouts/adminLayout/header.ejs")%>
+<%-include("../layouts/adminLayout/navbar.ejs")%>
+
+
+<section class="content-main">
+    <div class="row">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Add New Product</h2>
+                <div>
+                    <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                   
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Basic</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/addproduct" method="post" enctype="multipart/form-data" id="productForm">
+                        <div class="mb-4">
+                            <label for="" class="form-label" >name</label>
+                            <input type="text" name="name" placeholder="Type here" class="form-control" required />
+                        </div>
+                        <div class="mb-4">
+                            <label for="" class="form-label" >category</label>
+                            <select id="category" class="form-control" name="category" required>
+                                <option value="">select category</option>
+                                <%category.forEach((item)=> { %>  
+                                <option value="<%= item._id %>"><%= item.name %></option>
+                                <% }) %>  
+                                
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="" class="form-label" >description</label>
+                            <textarea name="description" placeholder="Type here" class="form-control"></textarea>
+                        </div>                                             
+                        <div class="mb-4">
+                            <label for="" class="form-label">availability</label>
+                            <input type="text" id="availability" name="availability" placeholder="Type here" class="form-control" required />
+                            <div id="availabilityError" class="text-danger"></div>
+
+                        </div>
+                    
+                        <div class="mb-4">
+                            <label for="" class="form-label" >price</label>
+                            <input type="text" id="price" name="price" placeholder="Type here" class="form-control" required />
+                            <div id="priceError" class="text-danger"></div>
+
+                        </div>
+                        <div class="input-upload">
+                            <img src="/public/productImages" alt="" />
+                            <input name="image"  class="form-control" type="file" multiple required/> 
+                        </div>
+                                  
+                           
+                                <button type="submit" class="btn btn-primary rounded justify-content-between mb-30 ">Publish</button>
+                            </div>
+                        </div>  
+                    </form>
+                </div>
+            </div>
+            <!-- card end// -->
+            
+        </div>
+    </div>
+</section>
+
+<script>
+    //validate availability
+    const form = document.getElementById("productForm");
+    const availabilityInput = document.getElementById("availability");
+    const availabilityError = document.getElementById("availabilityError");
+  
+    form.addEventListener("submit", (event) => {
+      const availabilityValue = parseInt(availabilityInput.value);
+      if (isNaN(availabilityValue) || availabilityValue < 0) {
+        event.preventDefault();
+        availabilityError.textContent = "Please enter a valid number greater than 0 for availability.";
+      } else {
+        availabilityError.textContent = "";
+      }
+    });
+
+    //validate price
+    const priceform = document.getElementById("productForm");
+    const priceInput = document.getElementById("price");
+    const priceError = document.getElementById("priceError");
+  
+    form.addEventListener("submit", (event) => {
+      const priceValue = parseInt(priceInput.value);
+      if (isNaN(priceValue) || priceValue < 0) {
+        event.preventDefault();
+        priceError.textContent = "Please enter a valid number greater than 0 for price.";
+      } else {
+        priceError.textContent = "";
+      }
+    });
+
+  </script>
+  
+
+<%-include("../layouts/adminLayout/footer.ejs")%>
+
+
