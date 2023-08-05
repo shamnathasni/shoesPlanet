@@ -328,6 +328,7 @@ const loadshop = async (req, res) => {
 
     const productCount = await Product.find({}).count()
     const productData = await Product.find({status:true}).populate("category").skip((page-1)*(5)).limit(5)
+    console.log(productData);
     const category = await Category.find({status:true})
     
     res.render("user/shop",{productData,category,
