@@ -11,7 +11,7 @@ user_route.set("views", "views")
 
 user_route.use(session({secret:config.sessionSecret}))
 
-user_route.get("/", userController.loginload)
+user_route.get("/", userController.loadhome)
 user_route.get("/login", userController.loginload)
 user_route.post("/login", userController.verifylogin)
 

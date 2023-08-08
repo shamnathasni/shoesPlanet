@@ -14,8 +14,8 @@
 </div>
 
 <div class="row block-9 justify-content-center" >
-    <div class="col-md-10 order-md-last d-flex align-items-center justify-content-center m-5">
-      <form action="/login" method="post"  class="bg-white p-5 login-form">
+    <div class="col-md-10 order-md-last d-flex align-items-center justify-content-center m-5" style="max-width: 40%;">
+      <form action="/login" method="post"  class="bg-white p-5 login-form" style="width: 100%;">
         <% if(message.length  > 0){ %>
           <div class="form-group">
             <p  style="padding: 10px 10px; background-color: rgb(255, 175, 175); border: 1px solid rgb(83, 5, 5); color: rgb(87, 1, 1);"><%= message %></p>
@@ -31,14 +31,14 @@
             <input type="password"  class="form-control" name="password" placeholder="your password">
         </div>
 
-        <div class="form-group">
+        <div class="form-group ">
           <p class="text-center">Didn't have an account? Please <a href="/signup">signup</a></p>
-          <a href="/forgotPassword">forgot password</a>
+          <p class="text-center"><a class="" href="/forgotPassword">forgot password</a></p>
         </div>
 
         
 
-        <div class="form-group">
+        <div class="form-group d-flex justify-content-center">
           <input type="submit"  class="btn btn-primary py-3 px-5 justify-content-center align-items-center ">
         </div>
       </form>
