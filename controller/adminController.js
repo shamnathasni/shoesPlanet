@@ -22,21 +22,20 @@ const verifylogin=async(req,res)=>{
 
     try {
 
-        const data={
-            email:req.body.email,
-            password:req.body.password
-        }
-        
-        const adminData={
-            adminEmail:"admin@gmail.com",
-            adminPassword:"111"
-        }
+       
+          const email=req.body.email
+          const  password=req.body.password
+    
+        // const adminData={
+        //     adminEmail:process.env.ADMIN_EMAIL,
+        //     adminPassword:process.env.ADMIN_PASS
+        // }
 
         
-        if(adminData){
-            const passwordMatch= bcrypt.compare(data.password,adminData.adminPassword)
-            if (passwordMatch) {
-                req.session.admin_id=adminData.adminEmail
+        if(email === process.env.ADMIN_EMAIL){
+            // const passwordMatch= bcrypt.compare(data.password,adminData.adminPassword)
+            if (password ===process.env.ADMIN_PASS) {
+                req.session.admin_id=process.env.ADMIN_EMAIL
                 res.redirect('/admin')
 
             } else {

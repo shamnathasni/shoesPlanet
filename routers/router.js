@@ -39,6 +39,8 @@ user_route.get("/shop",userController.loadshop)
 
 user_route.get("/singleproduct/:id",userController.loadSingleProduct)
 
+user_route.get("/cart/:id",userController.addtocart)
+
 user_route.get("/loadlogout",userController.loadlogout)
 
 module.exports = user_route

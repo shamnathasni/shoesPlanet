@@ -291,8 +291,6 @@ console.log(otp);
 
 const newPassword = async(req,res)=>{
   try {
-    console.log(req.body, req.session);
-    
     const password = await bcrypt.hash(req.body.password,10)
     await User.findOneAndUpdate({email:req.session.forgotEmail,isBlocked:false},{$set:{password:password}})
     res.redirect("/login")
@@ -306,10 +304,10 @@ const newPassword = async(req,res)=>{
 
 const loadhome = async (req, res) => {
   try {
-    if (req.session.user_id) {
+    // if (req.session.user_id) {
       // const products = await Product.find({ status: true });
       res.render("user/home");
-    }
+   
   } catch (error) {
     console.log(error.message);
   }
@@ -323,31 +321,45 @@ const loadshop = async (req, res) => {
         if( isNaN (page)||page<1){
             page = 1
         }
+    const{cat,search}=req.query
+    console.log(req.query);
+    const condition = {status:true}
+    if (cat) {
+       
+          condition.category= cat
+          
+        }
+      
 
-        const condition = {}
-
-    const productCount = await Product.find({}).count()
-    const productData = await Product.find({status:true}).populate("category").skip((page-1)*(5)).limit(5)
-    console.log(productData);
-    const category = await Category.find({status:true})
+    if (search) {
+      condition.name={$regex:search,$options:"i"}
+    }
+      
+        
+    const productCount = await Product.find(condition).count()
+    const productData = await Product.find(condition).populate("category").skip((page-1)*(5)).limit(5)
     
+    const category = await Category.find({status:true})
     res.render("user/shop",{productData,category,
       currentPage:page,
       hasNextpage:page*5<productCount,
       haspreviouspage:page>1,
       nextPage:page+1,
       previousPage:page-1,
-      lastPage:Math.ceil(productCount / 5)
+      lastPage:Math.ceil(productCount / 5),
+      cat:cat,
+      search:search
     });
   } catch (error) {
     console.log(error.message);
   }
 };
 
+
+
 const loadSingleProduct = async (req, res) => {
   try {
     const productData = await Product.findOne({_id:req.params.id,status:true}).populate("category")
-    console.log(productData);
     const category = await Category.find({})
 
     res.render("user/singleproduct",{productData,category});
@@ -356,7 +368,21 @@ const loadSingleProduct = async (req, res) => {
   }
 };
 
-const loadlogout = (req, res) => {
+const addtocart = async(req,res)=>{
+  try {
+    const productData = await Product.findOne({_id:req.params.id,status:true}).populate("category")
+    const categoryData =await Category.find({})
+    res.render("user/cart", 
+    {
+      productData,
+      categoryData
+    })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const loadlogout = async (req, res) => {
   try {
     if (req.session.user_id) {
       req.session.destroy((err) => {
@@ -366,11 +392,11 @@ const loadlogout = (req, res) => {
       });
     } else {
       res.redirect("/login");
-      res.render("user/home"); // Move this line inside the else block
+      res.render("user/home");
       return; // Add a return statement to prevent further execution
     }
 
-    res.render("user/home");
+    res.redirect("/home");
   } catch (error) {
     console.log(error.message);
   }
@@ -392,5 +418,7 @@ module.exports = {
   loadhome,
   loadshop,
   loadSingleProduct,
+  addtocart,
   loadlogout,
+
 };

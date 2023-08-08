@@ -16,7 +16,7 @@
           <div class="row">
             <% for(let i=0;i< productData.image.length;i++) {%> 
               <div class="col-lg-6 mb-5 ftco-animate">
-                <a href="productImages/<%=productData.image[i]%>" class="image-popup prod-img-bg"><img src="/productImages/<%=productData.image[i]%>" class="img-fluid" alt="Colorlib Template"></a>
+                <a href="/productImages/<%=productData.image[i]%>" class="image-popup prod-img-bg"><img src="/productImages/<%=productData.image[i]%>" class="img-fluid" alt="Colorlib Template"></a>
               </div>
                <%}%>
               <div class="col-lg-6 product-details pl-md-5 ftco-animate">
@@ -70,10 +70,10 @@
                 </div>
                 <div class="w-100"></div>
                 <div class="col-md-12">
-                    <p style="color: #000;">80 piece available</p>
+                    <p style="color: #ee0f0f;"><%=productData.availability%> piece left</p>
                 </div>
             </div>
-            <p><a href="cart.html" class="btn btn-black py-3 px-5 mr-2">Add to Cart</a><a href="cart.html" class="btn btn-primary py-3 px-5">Buy now</a></p>
+            <p><a href="/cart/<%=productData._id%>" class="btn btn-black py-3 px-5 mr-2">Add to Cart</a><a href="cart.html" class="btn btn-primary py-3 px-5">Buy now</a></p>
               </div>
           </div>
 
