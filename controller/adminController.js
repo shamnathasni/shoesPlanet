@@ -24,14 +24,7 @@ const verifylogin=async(req,res)=>{
 
        
           const email=req.body.email
-          const  password=req.body.password
-    
-        // const adminData={
-        //     adminEmail:process.env.ADMIN_EMAIL,
-        //     adminPassword:process.env.ADMIN_PASS
-        // }
-
-        
+          const  password=req.body.password        
         if(email === process.env.ADMIN_EMAIL){
             // const passwordMatch= bcrypt.compare(data.password,adminData.adminPassword)
             if (password ===process.env.ADMIN_PASS) {
@@ -39,7 +32,7 @@ const verifylogin=async(req,res)=>{
                 res.redirect('/admin')
 
             } else {
-                res.render("admin/login",({message:"you entered an invalid mail"}))  
+                res.render("admin/login",({message:"you entered an incorrect password"}))  
             }
           
         }else{

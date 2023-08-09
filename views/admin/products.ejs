@@ -39,8 +39,8 @@
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
-                            <tr>
-                                <th> </th>
+                            <tr class="text-center">
+                                <th></th>
                                 <th> name </th>
                                 <th> category </th>
                                 <th> description </th>
@@ -59,23 +59,26 @@
                                             <div class="left">
                                                 <img src="/productImages/<%=product.image[0] %>" class="img-sm img-thumbnail"  alt="Item" />
                                             </div>
+                                        </a>
+                                    </td>
+                                    <td>   
                                             <div class="info">
                                                 <h3 class="mb-0"><%= product.name %></h3>
                                             </div>
-                                        </a>
+                                    </td>
                                     <td class="col-status">
                                         <span class="badge rounded-pill alert-success"><%= product.category.name %></span>
                                     </td>
                                     <td class="description-cell">
-                                        <div class="description-content">
-                                         <h4 class="mb-0"> <%= product.description %></h4>
+                                        <div class="description-content text-center">
+                                         <p class="mb-0 " style="width: 140px;"> <%= product.description %></p>
                                         </div>
                                        
                                     </td>
                                     <!-- Product Price -->
                                     <td class="col-price"><span><%= product.price %></span></td>
                                     <!-- Product Status -->
-                                    <td class="col-status">
+                                    <td class="col-status text-center">
                                        <h5 class="mb-0"><%= product.availability %></h5> 
                                     </td>
                                     <td class="text-end">
