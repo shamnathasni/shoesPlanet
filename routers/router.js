@@ -54,6 +54,7 @@ user_route.get("/Address",adressController.loadAdress)
 user_route.get("/addAddress",adressController.loadAddAdress)
 user_route.post("/addAddress",adressController.postloadAddAdress)
 
+
 user_route.get("/loadlogout",userController.loadlogout)
 
 module.exports = user_route

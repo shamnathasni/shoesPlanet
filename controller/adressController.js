@@ -20,10 +20,10 @@ const loadAddAdress = async(req,res)=>{
     }
 }
 
+console.log(1);
 
 const postloadAddAdress = async(req,res) => {
     try {
-        console.log(1);
 
         const user = req.sesson.user_id
         const adress = await findOne({user:user})
