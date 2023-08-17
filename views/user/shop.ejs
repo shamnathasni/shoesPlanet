@@ -56,11 +56,13 @@ form.example::after {
   <div class="container" >
     <div class="row">
       <div class="col-md-8 col-lg-10 order-md-last">
+
         <form class="example">
           <input type="text" id="search" style="margin-bottom: 10px;"  placeholder="Search your products.." name="search">
           <input type="hidden" name="cat" value="<%=cat%>">
           <button type="submit"><i class="fa fa-search"></i></button>
         </form>
+        
         <div class="row" >
       
         <% for (let product of productData ) { %>
@@ -89,7 +91,7 @@ form.example::after {
                   <p class="price"><span>₹<%= product.price %></span></p>
                 </div>
                 <p class="bottom-area d-flex px-3">
-                  <a href="/singleproduct/<%=product._id%> " class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
+                  <a href="/cart/<%=product._id%> " class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
                   <!-- <a href="#" class="buy-now text-center py-2">Buy now<span><i class="ion-ios-cart ml-1"></i></span></a> -->
                 </p>
               </div>

@@ -1,7 +1,11 @@
 const express=require("express")
 const user_route=express()
 
-const userController=require("../controller/userController")
+const userController = require("../controller/userController")
+const cartController = require("../controller/cartController")
+const adressController = require("../controller/adressController")
+
+const userAuth = require("../middleware/userAuth.js")
 
 const session=require("express-session")
 const config=require("../config/config")
@@ -39,7 +43,16 @@ user_route.get("/shop",userController.loadshop)
 
 user_route.get("/singleproduct/:id",userController.loadSingleProduct)
 
-user_route.get("/cart/:id",userController.addtocart)
+user_route.get("/cart", userAuth.isUserlogin, cartController.loadCart)
+user_route.post("/addtocart", cartController.addtocart)
+user_route.get("/deleteCartProduct",cartController.deleteCart)
+user_route.post("/quantityChange",cartController.quantityChange)
+
+user_route.get("/userProfile",userController.loadProfile)
+
+user_route.get("/Address",adressController.loadAdress)
+user_route.get("/addAddress",adressController.loadAddAdress)
+user_route.post("/addAddress",adressController.postloadAddAdress)
 
 user_route.get("/loadlogout",userController.loadlogout)
 

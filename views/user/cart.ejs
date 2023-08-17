@@ -1,70 +1,183 @@
 <%-include("../layouts/userlayout/header.ejs") %>
 <%-include("../layouts/userlayout/nav.ejs") %>
 
-<div class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg');">
-    <div class="container">
-      <div class="row no-gutters slider-text align-items-center justify-content-center">
-        <div class="col-md-9 ftco-animate text-center">
-            <p class="breadcrumbs"><span class="mr-2"><a href="/home">Home</a></span> <a href="/shop"><span>shop</span></a></p>
-          <h1 class="mb-0 bread">My Cart</h1>
-        </div>
+<div
+  class="hero-wrap hero-bread"
+  style="background-image: url('productImages/bg_6.jpg')"
+>
+  <div class="container">
+    <div
+      class="row no-gutters slider-text align-items-center justify-content-center"
+    >
+      <div class="col-md-9 ftco-animate text-center">
+        <p class="breadcrumbs">
+          <span class="mr-2"><a href="/home">Home</a></span>
+          <a href="/shop"> <span>Shop</span></a>
+        </p>
+        <h1 class="mb-0 bread">My Cart</h1>
       </div>
     </div>
   </div>
+</div>
 
+<section class="ftco-section ftco-cart">
+  <div class="container">
+    <% if( cartData && cartData.product.length > 0 ) { %>
+    <div class="row">
+      <div class="col-md-12 ftco-animate">
+        <div class="cart-list">
+          <table class="table"id="reloadDiv" > 
+            <thead class="thead-primary">
+              <tr class="text-center">
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(let item of cartData.product){%>
 
-  <section class="ftco-section ftco-cart">
-    <div class="container">
-        <div class="row">
-        <div class="col-md-12 ftco-animate">
-            <div class="cart-list">
-                <table class="table">
-                    <thead class="thead-primary">
-                      <tr class="text-center">
-                        
-                        <th>&nbsp;</th>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="text-center">
-                      
+              <tr class="text-center" id="cart-row-<%= item._id %>">
+                <td class="product-remove">
+                  <a href="/deleteCartProduct?id=<%=item.product_Id._id%>"><span class="ion-ios-close"></span></a>
+                </td>
+console.log("2222"+<%=item.product_Id._id%>)
+                <td class="image-prod">
+                  <div class="img">
+                    <img
+                      src="/productImages/<%= item.product_Id.image %>"
+                      width="100"
+                      alt=""
+                    />
+                  </div>
+                </td>
 
-                        <td class="image-prod">
-                          <div class="img" style="width: 100px; height: 100px; overflow: hidden;">
-                            <!-- Display the product image using an <img> tag -->
-                            <img src="/productImages/<%= productData.image[0] %>" class="img-md" alt="Product Image" style="max-width: 100%; height: auto; im">
-                          </div>
-                        </td>
-                        
-                           
-                        <td class="product-name">
-                            <h3><%=productData.name%></h3>
-                          
-                        </td>
-                        
-                        <td class="price"><%=productData.price%></td>
-                        
-                        <td class="quantity">
-                            <div class="input-group mb-3">
-                             <input type="text" name="availability" class="quantity form-control input-number" value="quantity" min="1" max="100">
-                              
-                            </div>
-                      </td>
-                        
-                        <td class="total">$4.90</td>
-                      </tr><!-- END TR-->
-                 
-                    </tbody>
-                </table>
-            </div>
+                <td class="product-name">
+                  <h3><%=item.product_Id.name%></h3>
+                </td>
+
+                <td class="price">₹<%=item.product_Id.price%></td>
+
+                <td class="quantity">
+                  <div class="input-group mb-3">
+                    <span class="input-group-btn mr-2">
+                      <button
+                        type="button"
+                        class="quantity-left-minus btn"
+                        onclick="increaseQuantity('<%= item.product_Id._id %>', -1,event)"
+                        data-type="minus"
+                        data-field=""
+                      >
+                        <i class="ion-ios-remove"></i>
+                      </button>
+                    </span>
+                    <input
+                      type="text"
+                      name="quantity"
+                      class="quantity form-control input-number"
+                      id="quantity"
+                      value="<%= item.quantity %>"
+                      min="1"
+                      max="100"
+                    />
+                    <span class="input-group-btn ml-2">
+                      <button
+                        type="button"
+                        class="quantity-right-plus btn"
+                        onclick="increaseQuantity('<%=item.product_Id._id%>',1,event)"
+                        data-type="plus"
+                        data-field=""
+                      >
+                        <i class="ion-ios-add"></i>
+                      </button>
+                    </span>
+                  </div>
+                </td>
+
+                <td class="total">₹<%=item.total%></td>
+              </tr>
+              <!-- END TR-->
+              <%}%>
+            </tbody>
+          </table>
         </div>
-        </div>
+      </div>
     </div>
-  </section>                    
+    <div class="row justify-content-start">
+      <div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
+        <div class="cart-total mb-3" id="reloadcartDiv">
+          <h3>Cart Totals</h3>
+          <p class="d-flex">
+            <span>Subtotal</span>
+            <span>₹<%=cartData.grandTotal%></span>
+          </p>
+          <p class="d-flex">
+            <span>Delivery</span>
+            <span>₹0.00</span>
+          </p>
+          <p class="d-flex">
+            <span>Discount</span>
+            <span>₹0.00</span>
+          </p>
+          <hr />
+          <p class="d-flex total-price">
+            <span>Total</span>
+            <span>₹<%=cartData.grandTotal%></span>
+          </p>
+        </div>
+        <p class="text-center">
+          <a href="checkout.html" class="btn btn-primary py-3 px-4"
+            >Proceed to Checkout</a
+          >
+        </p>
+      </div>
+    </div>
+    <%}else{%>
+    <div class="col-md-12 ftco-animate mt-5">
+      <h1 class="text-center"><b>Cart is empty...</b></h1>
+      <br />
+      <h3 class="text-center shop-now"><a href="/shop">Shop now</a></h3>
+    </div>
+    <% } %>
+  </div>
+</section>
 
+<script>
+  function increaseQuantity(productId, count, event) {
+    event.preventDefault();
+    $.ajax({
+      url: "/quantityChange",
+      method: "post",
+      data: {
+        productId,
+        count: count,
+      },
+      success: (response) => {
+        if (response.success) {
+          $("#reloadDiv").load("/cart #reloadDiv");
+          $("#reloadcartDiv").load("/cart #reloadcartDiv");
+        } else {
+          Swal.fire({
+            title: "warning",
+            icon: "warning",
+            text: response.message,
+            timer: 2000,
+          });
+        }
+      },
+      error: (error) => {
+        Swal.fire({
+          title: "warning",
+          icon: "warning",
+          text: response.message,
+          timer: 1500,
+        });
+      },
+    });
+  }
+</script>
 
 <%-include("../layouts/userlayout/footer.ejs") %>

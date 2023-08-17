@@ -27,6 +27,10 @@ const productSchema = new mongoose.Schema({
         type:Array,
         required:true
     },
+    size:{
+        type:Array,
+        required:true
+    },
     status:{
         type:Boolean,
         default:true

@@ -1,0 +1,53 @@
+<%- include("../layouts/userLayout/header.ejs")%>
+<%-include("../layouts/userlayout/nav.ejs") %>
+
+
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 ftco-animate">
+                <div class="mt-4 d-flex justify-content-center profile-buttons">
+                    <a href="/addAddress" class="btn btn-primary btn-sm mr-3">Add</a>
+                </div>
+                <% if(data&&data.length>0) {%>
+                <div class="card">
+                    <div class="card-body">
+                        <%for(let items of data) {%>
+                        <h3 class="mb-4 billing-heading">Address Details</h3>
+                        <div class="row">
+                            <div class="col-md-12">                              
+                                <p><strong>Name:</strong> <%=items.name%></p>
+                                <p><strong>Phone:</strong> <%=items.mobile%></p>
+                                <p><strong>Email:</strong> <%=items.email%></p>
+                                <p><strong>Address:</strong></p>
+                                <address>
+                                    House #123, Street Name<br>
+                                    Landmark Place<br>
+                                    City: City Name<br>
+                                    State: State Name<br>
+                                    Country: Country Name<br>
+                                    Postcode / ZIP: 12345
+                                </address>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <p> <a href="#">Edit </a></p>
+                                <p> <a href="#">Delete</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <%}%>
+            </div>
+            <%} else {%>
+                <h1 style="text-align: center;" >Add New Address</h1>
+            <%}%>
+        </div>
+    </div>
+</section>
+
+
+<%-include("../layouts/userlayout/footer.ejs") %>
+<%-include("../layouts/userlayout/footerNav.ejs") %>

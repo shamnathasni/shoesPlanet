@@ -1,4 +1,4 @@
-const { name } = require("ejs");
+// const { name } = require("ejs");
 const Category = require("../models/categoryModel");
 
 const category=async(req,res)=>{
@@ -14,7 +14,7 @@ const category=async(req,res)=>{
         
     }
 }
-const addcategory=async(req,res)=>{
+const addcategory = async(req,res)=>{
     try {
 
         res.render("admin/addcategory")
@@ -26,18 +26,18 @@ const addcategory=async(req,res)=>{
     }
 }
 
-const postaddcategory=async(req,res)=>{
-
+const postaddcategory = async(req,res)=>{
+console.log(6);
     try {
 
-        const {name,description}=req.body
+        const {name} = req.body
 
         const newCategory= new Category({
-            name,
-            description
+            name
         })
 
-        const savedcategory = await newCategory.save()
+      await newCategory.save()
+      console.log(newCategory);
         res.redirect("/admin/category")
 
     } catch (error) {

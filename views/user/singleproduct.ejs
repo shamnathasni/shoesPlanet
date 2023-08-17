@@ -11,14 +11,14 @@
     </div>
   </div>
 
-  <section class="ftco-section">
-      <div class="container">
-          <div class="row">
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row">
             <% for(let i=0;i< productData.image.length;i++) {%> 
               <div class="col-lg-6 mb-5 ftco-animate">
                 <a href="/productImages/<%=productData.image[i]%>" class="image-popup prod-img-bg"><img src="/productImages/<%=productData.image[i]%>" class="img-fluid" alt="Colorlib Template"></a>
               </div>
-               <%}%>
+              <%}%>
               <div class="col-lg-6 product-details pl-md-5 ftco-animate">
                   <h3><%=productData.name%></h3>
                   <div class="rating d-flex">
@@ -56,26 +56,26 @@
                           </div>
                           <div class="w-100"></div>
                           <div class="input-group col-md-6 d-flex mb-3">
-                   <span class="input-group-btn mr-2">
-                      <button type="button" class="quantity-left-minus btn"  data-type="minus" data-field="">
-                     <i class="ion-ios-remove"></i>
-                      </button>
-                      </span>
-                   <input type="text" id="quantity" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-                   <span class="input-group-btn ml-2">
-                      <button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
-                       <i class="ion-ios-add"></i>
-                   </button>
-                   </span>
+                  
                 </div>
                 <div class="w-100"></div>
                 <div class="col-md-12">
                     <p style="color: #ee0f0f;"><%=productData.availability%> piece left</p>
                 </div>
             </div>
-            <p><a href="/cart/<%=productData._id%>" class="btn btn-black py-3 px-5 mr-2">Add to Cart</a><a href="cart.html" class="btn btn-primary py-3 px-5">Buy now</a></p>
-              </div>
-          </div>
+            <!-- <input type="hidden" id="custId" name="product" value="<%=productData.id%>"> -->
+
+            <% if(productData.availability>0){%>
+              
+                <p><a class="btn btn-black py-3 px-5 mr-2" onclick="addToCart('<%=productData._id%>')">Add to Cart</a><a href="cart.html" class="btn btn-primary py-3 px-5">Buy now</a></p>
+              
+            <%}else{%>
+
+                <a style="color: rgb(241, 58, 58);" class="btn btn-danger mr-2"> out of Stock!!</a>
+
+            <%}%> 
+        </div>
+        </div>
 
 
 
@@ -232,19 +232,42 @@
                                              <span>0 Reviews</span>
                                          </p>
                                      </div>
-                                 </div>
-                             </div>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      </div>
-      
-
-  </section>
-      
+    </section>
 
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+ async function addToCart(product_Id) {
+    
+    let product_quantity = 1
+    try {
+        const response = await axios.post('/addtocart', { product_quantity , product_Id });
+
+        if (response.data.success) {
+            console.log('Product added to the cart');
+            // Handle success, e.g., update the UI to reflect the product added to the cart
+        } else if (response.data.loginRequired) {
+            window.location = '/login'
+            // Handle login required, e.g., redirect the user to the login page
+        } else {
+            console.log('An error occurred while adding the product to the cart');
+            // Handle other errors, e.g., display an error message to the user
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+        // Handle network or server errors, e.g., display an error message to the user
+    }
+}
+
+</script>
 
 <%-include("../layouts/userlayout/footerNav.ejs") %>
 <%-include("../layouts/userlayout/footer.ejs") %>

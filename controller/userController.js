@@ -1,6 +1,7 @@
 const User = require("../models/userModels");
 const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
+const Cart = require("../models/cartModel")
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const randomstring = require("randomstring");
@@ -129,7 +130,7 @@ const verifylogin = async (req, res) => {
           res.redirect("/otpReminder");
         } else {
         
-
+          console.log(userData._id);
           req.session.user_id = userData._id;
           res.render("user/home");
         }
@@ -304,56 +305,56 @@ const newPassword = async(req,res)=>{
 
 const loadhome = async (req, res) => {
   try {
-    // if (req.session.user_id) {
-      // const products = await Product.find({ status: true });
-      res.render("user/home");
-   
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-
-const loadshop = async (req, res) => {
-  try {
-    let page = Number(req.query.page)
-        
-        if( isNaN (page)||page<1){
-            page = 1
-        }
-    const{cat,search}=req.query
-    console.log(req.query);
-    const condition = {status:true}
-    if (cat) {
-       
-          condition.category= cat
-          
-        }
-      
-
-    if (search) {
-      condition.name={$regex:search,$options:"i"}
-    }
-      
-        
-    const productCount = await Product.find(condition).count()
-    const productData = await Product.find(condition).populate("category").skip((page-1)*(5)).limit(5)
     
-    const category = await Category.find({status:true})
-    res.render("user/shop",{productData,category,
-      currentPage:page,
-      hasNextpage:page*5<productCount,
-      haspreviouspage:page>1,
-      nextPage:page+1,
-      previousPage:page-1,
-      lastPage:Math.ceil(productCount / 5),
-      cat:cat,
-      search:search
-    });
+      res.render("user/home");
+  
   } catch (error) {
     console.log(error.message);
   }
 };
+
+
+  const loadshop = async (req, res) => {
+    try {
+      let page = Number(req.query.page)
+          
+          if( isNaN (page)||page<1){
+              page = 1
+          }
+      const{cat,search}=req.query
+      console.log(req.query);
+      const condition = {status:true}
+      if (cat) {
+        
+            condition.category= cat
+            
+          }
+        
+
+      if (search) {
+        condition.name={$regex:search,$options:"i"}
+      }
+        
+          
+      const productCount = await Product.find(condition).count()
+      const productData = await Product.find(condition).populate("category").skip((page-1)*(5)).limit(5)
+      
+      const category = await Category.find({status:true})
+      res.render("user/shop",{productData,category,
+        currentPage:page,
+        totalCount:productCount,
+        hasNextpage:page*5<productCount,
+        haspreviouspage:page>1,
+        nextPage:page+1,
+        previousPage:page-1,
+        lastPage:Math.ceil(productCount / 5),
+        cat:cat,
+        search:search
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
 
 
@@ -368,18 +369,15 @@ const loadSingleProduct = async (req, res) => {
   }
 };
 
-const addtocart = async(req,res)=>{
-  try {
-    const productData = await Product.findOne({_id:req.params.id,status:true}).populate("category")
-    const categoryData =await Category.find({})
-    res.render("user/cart", 
-    {
-      productData,
-      categoryData
-    })
-  } catch (error) {
-    console.log(error.message);
-  }
+const loadProfile = async(req,res) => {
+    try {
+      const user = await User.findOne({_id: req.session.user_id })
+      res.render("user/userProfile",{user:user})
+      
+    } catch (error) {
+      console.log(error.message)
+    }
+
 }
 
 const loadlogout = async (req, res) => {
@@ -418,7 +416,10 @@ module.exports = {
   loadhome,
   loadshop,
   loadSingleProduct,
-  addtocart,
+  loadProfile,
   loadlogout,
 
 };
+
+
+

@@ -1,0 +1,48 @@
+<%- include('../layouts/userlayout/header.ejs') %>
+<%- include('../layouts/userlayout/nav.ejs') %>
+
+<style>
+    .profile-buttons a {
+        font-weight: 700;
+    }
+</style>
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card profile-card">
+                    <div class="card-body text-center">
+                        <h2 class="card-title mb-4">User Profile</h2>
+                        <div class="row">
+                        <div class="col-md-4">
+                            <!-- User profile image or avatar -->
+                            <div class="user-avatar">
+                                <img height="100px" src="productImages\download.png" alt="User Avatar">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-1 mb-5 ml-3" style="display: flex; flex-direction: column; text-align: left;">
+                            <p class="card-text"><strong>Name : </strong><%=user.name%></p>
+                            <p class="card-text"><strong>Email : </strong><%=user.email%></p>
+                            <p class="card-text"><strong>Phone : </strong><%=user.mobile%></p>
+                            </div>
+                        </div>
+                        <div class="mt-4 d-flex justify-content-center profile-buttons">
+                            <a href="/Address" class="btn btn-primary btn-sm mr-3">Show Address</a>
+                            <a href="/show-orders" class="btn btn-secondary btn-sm mr-3">Show Orders</a>
+                            <a href="/edit-profile" class="btn btn-info btn-sm">Edit Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../layouts/userlayout/footerNav.ejs') %>
+<%- include('../layouts/userlayout/footer.ejs') %>
+
