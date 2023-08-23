@@ -7,39 +7,38 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-8 ftco-animate">
-                <div class="mt-4 d-flex justify-content-center profile-buttons">
-                    <a href="/addAddress" class="btn btn-primary btn-sm mr-3">Add</a>
+                <div class="row mt-3 pl-lg-5 profile-buttons p-2">
+                    <a class="btn text-primary fw-bold " href="/addAddress">Add Address</a>
                 </div>
+                <h3 class="mb-4 billing-heading">Address Details</h3>
                 <% if(data&&data.length>0) {%>
+                <%for(let items of data) {%>
                 <div class="card">
-                    <div class="card-body">
-                        <%for(let items of data) {%>
-                        <h3 class="mb-4 billing-heading">Address Details</h3>
-                        <div class="row">
+                    <div class="card-body" id="adressdiv-<%=items._id%>">
+                        <div class="row" >
                             <div class="col-md-12">                              
-                                <p><strong>Name:</strong> <%=items.name%></p>
-                                <p><strong>Phone:</strong> <%=items.mobile%></p>
-                                <p><strong>Email:</strong> <%=items.email%></p>
-                                <p><strong>Address:</strong></p>
-                                <address>
-                                    House #123, Street Name<br>
-                                    Landmark Place<br>
-                                    City: City Name<br>
-                                    State: State Name<br>
-                                    Country: Country Name<br>
-                                    Postcode / ZIP: 12345
-                                </address>
+                                <p>Name: <%=items.name%> <br>
+                                mobile: <%=items.mobile%> <br>
+                                email: <%=items.email%> <br>
+                                <strong>Address:</strong>
+                                    <%=items.houseName%>,<%=items.landmark%><br>
+                                    City: <%=items.city%>
+                                    State: <%=items.state%> <br>
+                                    Country: <%=items.country%>
+                                    Postcode / ZIP: <%=items.pincode%>
+                                
+                                </p>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <div class="col-md-12">
-                                <p> <a href="#">Edit </a></p>
-                                <p> <a href="#">Delete</a></p>
-                            </div>
+                            <a class="btn btn-primary" href="editAdress/<%= items._id%>">Edit </a> 
+                            <a class="btn btn-dark" onclick="removeAdress('<%=items._id%>')">Delete</a>
                         </div>
                     </div>
+                    </div>
                 </div>
-            <%}%>
+             <%}%>
             </div>
             <%} else {%>
                 <h1 style="text-align: center;" >Add New Address</h1>
@@ -48,6 +47,20 @@
     </div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+async function removeAdress(userid) {
+
+    const response = await axios.patch(`removeAdress/${userid}`)
+    if (response.data.success) {
+
+        const addressdiv = document.getElementById(`adressdiv-${userid}`)
+        addressdiv.style.display = 'none'
+    }
+}
+
+</script>
 
 <%-include("../layouts/userlayout/footer.ejs") %>
 <%-include("../layouts/userlayout/footerNav.ejs") %>

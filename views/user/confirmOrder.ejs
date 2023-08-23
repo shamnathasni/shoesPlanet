@@ -1,0 +1,30 @@
+
+  <h1>Confirm Your Order</h1>
+  
+  <h2>Order Summary</h2>
+  <ul>
+    <!-- Loop through the cart items and display them -->
+    <li>Product Name: Product 1, Quantity: 2, Price: $20</li>
+    <li>Product Name: Product 2, Quantity: 1, Price: $15</li>
+    <!-- Repeat for other cart items -->
+  </ul>
+  
+  <h2>Shipping Address</h2>
+  <p>Name: John Doe</p>
+  <p>Address: 123 Main St, City, State, Country, ZIP</p>
+  
+  <h2>Payment Method</h2>
+  <p>Payment Method: Credit Card</p>
+  
+  <h2>Total Amount</h2>
+  <p>Total: $55</p>
+  
+  <form action="/placeOrder" method="post">
+    <!-- Include any hidden input fields for sending data to the server -->
+    <input type="hidden" name="address" value="123 Main St, City, State, Country, ZIP">
+    <input type="hidden" name="paymentMethod" value="Credit Card">
+    <input type="hidden" name="grandTotal" value="55">
+    
+    <button type="submit">Confirm Order</button>
+  </form>
+

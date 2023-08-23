@@ -1,0 +1,400 @@
+<%-include("../layouts/userlayout/header.ejs") %>
+<%-include("../layouts/userlayout/nav.ejs") %>
+<style>
+/* your-styles.css */
+
+/* Style for the form container */
+.container {
+  padding: 30px;
+}
+
+/* Style for the "Add Address" button */
+.btn-sm {
+  font-size: 14px;
+}
+
+/* Style for the billing details section */
+.billing-form {
+  border: 1px solid #e6e6e6;
+  padding: 20px;
+}
+
+/* Style for the address items */
+#addressContainer {
+  margin-top: 10px;
+}
+
+/* Style for the order summary section */
+.your_order {
+  border: 1px solid #e6e6e6;
+  padding: 20px;
+}
+
+/* Style for the payment method */
+.payment_item {
+  margin-top: 20px;
+}
+
+/* Style for the terms and conditions checkbox */
+.creat_account {
+  margin-top: 10px;
+}
+
+/* Style for the "Proceed to Payment" button */
+.primary-btn {
+  background-color: #ff9900;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Hover effect for buttons */
+.btn:hover {
+  opacity: 0.8;
+}
+
+
+</style>
+
+<div class="hero-wrap hero-bread" style="background-image: url('productImages/bg_6.jpg');">
+  <div class="container">
+    <div class="row no-gutters slider-text align-items-center justify-content-center">
+      <div class="col-md-9 ftco-animate text-center">
+        <p class="breadcrumbs"><span class="mr-2"><a href="/home">Home</a></span> <a href="/cart"><span>Cart</span></a></p>
+        <h1 class="mb-0 bread">Checkout</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- Address Selection and Add Address Button -->
+ <button
+ type="button"
+ class="btn btn-primary btn-sm mb-3"
+ data-toggle="modal"
+ data-target="#addressModal"
+>
+ Add Address
+</button>
+
+<% if(address && address.length > 0) {%>
+  <% for (let items of address) {%>
+    <form id="checkoutform" onsubmit="placeOrder(event)">
+        <section class="checkout_area section_gap">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-7">
+                      
+                        <!-- Billing Details -->
+                        <div class="billing-form">
+                
+                            <!-- Dynamic addresses will be added here -->
+                            <div id="addressContainer">
+                                <!-- Address items will be dynamically populated here -->
+
+                                <div class="card">
+                                  <div class="card-body">
+                                      <div class="row" >
+                                          <div class="col-md-12"> 
+                                            <input type="radio" name="address"  id="adress<%=items._id%>"
+                                            > 
+                                                                     
+                                              <p>Name: <%=items.name%> <br>
+                                              mobile: <%=items.mobile%> <br>
+                                              email: <%=items.email%> <br>
+                                              <strong>Address:</strong>
+                                                  <%=items.houseName%>,<%=items.landmark%><br>
+                                                  City: <%=items.city%>
+                                                  State: <%=items.state%> <br>
+                                                  Country: <%=items.country%>
+                                                  Postcode / ZIP: <%=items.pincode%>
+                                              
+                                              </p>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  </div>
+                              </div>
+                              </div>
+                              
+                        </div>
+                    </div>
+<%}%>
+<%}%>
+<div class="col-lg-4">
+  <div class="your_order">
+    <div class="order_box">
+      <h2>Your Order</h2>
+      <ul class="list pl-2">
+        <!-- <li>
+                    <a href="#"> <span> </span></a>
+                </li> -->
+        <% let sum = 0 %> <% cart[0].product.forEach((carts)=>{ %>
+        <li>
+
+          <div class="row pl-2 d-flex justify-content-between">
+
+            <a href="#"><%=carts.product_Id.name %> </a>
+            <span class="last">x<%= carts.quantity %></span>
+            <span class="last">₹ <%= carts.total %></span>
+          </div>
+        </li>
+        <% }) %>
+      </ul>
+      <ul class="list list_2 pl-2">
+        <!-- <li>
+        <a href="#">Subtotal <span>$2160.00</span></a>
+      </li> -->
+        <!-- <li>
+        <a href="#">Shipping <span>Flat rate: $50.00</span></a>
+      </li> -->
+        <li>
+       
+            Total <span>₹ <%= cart[0].grandTotal %></span>
+          
+        </li>
+      </ul>
+    
+      <input type="hidden" id="grandTotal" name="grandTotal" value="<%= cart[0].grandTotal %>" />
+      <div class="payment_item">
+        <div class="radion_btn">
+          <input type="radio" id="COD" name="paymentMethod" value="COD" />
+          <label for="f-option5">COD</label>
+          <div class="check"></div>
+          
+        </div>
+        <p style="color: rgb(105, 104, 104)">
+          Pay with cash when the product is delivered to your doorstep.
+        </p>
+      </div>
+      <div class="payment_item active">
+        <div class="radion_btn">
+          <input type="radio" id="Razorpay" name="paymentMethod" value="Razorpay" />
+          <label for="f-option6">Razorpay </label>
+          <img
+            src="img/product/c.jpg"
+            style="font-family: sans-serif"
+            alt=""
+          />
+          <div class="check"></div>
+        </div>
+        <p style="color: rgb(102, 101, 101)">
+                 Pay via Razorpay; you can pay with your credit card if you
+                  don’t have a Razorpay account.
+                </p>
+              </div>
+              <div class="creat_account">
+                <input type="checkbox" id="f-option4" name="selector" />
+                <label for="f-option4">I’ve read and accept the </label>
+                <a href="#">terms & conditions*</a>
+              </div>
+              <button onclick="placeOrder()" class="site-btn">PLACE ORDER</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+        </section>
+    </form>
+
+    <!-- Address Modal -->
+    <div class="modal fade mt-5" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
+      
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="addressModalLabel">
+        Add Address
+      </h5>
+      <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button> -->
+    </div>
+    
+    <div class="modal-body">
+      <form method="post" action="/orderAddress" class="contact_form">
+        <div class="form-group">
+          <label for="name">name</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Enter the Name"
+            required />
+        </div>
+        <div cllass="form-group">
+          <label for="name">mobile</label>
+          <input type="text" class="form-control" id="name" name="mobile" placeholder="Enter the mobile"
+            required />
+        </div>
+        <div cllass="form-group">
+          <label for="name">email</label>
+          <input type="text" class="form-control" id="name" name="email" placeholder="Enter the email"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="housename">HouseName</label>
+          <input type="text" class="form-control" id="housename" name="houseName"
+            placeholder="Enter the House Name" required />
+        </div>
+        <div class="form-group">
+          <label for="city">landmark</label>
+          <input type="text" class="form-control" id="city" name="landmark" placeholder="Enter the landmark"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="state">city</label>
+          <input type="text" class="form-control" id="state" name="city" placeholder="Enter the city"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="phone">state</label>
+          <input type="text" class="form-control" id="phone" name="state" placeholder="Enter the state"
+          required />
+       </div>
+      
+      <div class="form-group">
+        <div class="form-group">
+          <label for="phone">country</label>
+          <input type="text" class="form-control" id="phone" name="country" placeholder="Enter the country"
+          required />
+       </div>
+      
+      <div class="form-group">
+        <label for="pincode">Pincode</label>
+        <input type="text" class="form-control" id="pincode" name="pincode"
+          placeholder="Enter the Pincode" required />
+      </div>
+      <button type="submit" class="btn btn-primary">
+        Add Address
+      </button>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+<div class="modal fade top rounded-0" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
+aria-hidden="true" data-backdrop="true">
+<div class="modal-dialog modal-dialog-centered modal-full-width modal-full-width" role="document">
+  <div class="modal-content rounded-0">
+    <div class="modal-header bg-danger rounded-0">
+      <h5 class="modal-title" id="successModalLabel">Payment failed</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Unfortunately couldn't complete payment</p>
+    </div>
+  </div>
+</div>
+</div>
+
+      <!-- Modal content goes here -->
+</div>
+
+    <!-- Include your JavaScript scripts here -->
+<!-- Include your JavaScript scripts here -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  async function placeOrder() {
+    try {
+      let addressId = document.querySelector("input[name=address]:checked");
+      let paymentMethodRadio = document.querySelector('input[name=paymentMethod]:checked');
+      let grandTotal = parseInt(document.querySelector('input[name=grandTotal]').value);
+
+      if (!paymentMethodRadio || !addressId) {
+        alert("Please select an address and payment method.");
+        return;
+      }
+
+      console.log(111);
+      console.log(addressId, paymentMethodRadio, grandTotal);
+
+
+      const address = addressId.value
+      const paymentMethod = paymentMethodRadio.value
+
+      $.ajax({
+        url: '/placeOrder',
+        method: 'post',
+        data: {
+          address: address ,paymentMethod ,grandTotal,
+        },
+        success: (response) => {
+          if (response.Success == true) {
+            location.href = '/orderConfirm';
+          }else{
+            razorpayPayment(order.payment)
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  // Move the event listener here
+  $("#checkoutform").submit((e) => {
+    e.preventDefault();
+    placeOrder(); // Call the placeOrder function when the form is submitted
+  });
+
+
+function razorpayPayment( order ) {
+
+const rzp_key = '<%= process.env.RAZORPAY_KEY_ID %>'
+
+
+var options = {
+    "key": rzp_key, // Enter the Key ID generated from the Dashboard
+    "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "ShoesPlanet ", //your business name
+    "description": "Test Transaction",
+    "image": "productImages/logo.png",
+    "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        verifyPayment( response, order )
+    },
+    "notes": {
+        "address": "shoesPlanet office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.open();
+}
+
+async function verifyPayment ( response, order){
+    const result = await axios.post( '/verify-payment', {
+        response,
+        order
+    })
+    if( result.data.paid ) {
+        window.location = '/confirm-order'
+    } else {
+        window.location = '/orders'
+        const modal = document.getElementById('modalCookie1')
+        const successModal = document.getElementById("successModal");
+
+        // Show the success modal
+        successModal.classList.add("show");
+        successModal.style.display = "block";
+
+        // Hide the success modal when clicked anywhere
+        successModal.addEventListener("click", () => {
+        successModal.classList.remove("show");
+        successModal.style.display = "none";
+        window.location = '/orders'
+        });
+    }
+}
+
+</script>
+<%-include("../layouts/userlayout/footer.ejs") %>

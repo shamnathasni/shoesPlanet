@@ -4,6 +4,7 @@ const user_route=express()
 const userController = require("../controller/userController")
 const cartController = require("../controller/cartController")
 const adressController = require("../controller/adressController")
+const orderController = require("../controller/orderController")
 
 const userAuth = require("../middleware/userAuth.js")
 
@@ -50,11 +51,21 @@ user_route.post("/quantityChange",cartController.quantityChange)
 
 user_route.get("/userProfile",userController.loadProfile)
 
-user_route.get("/Address",adressController.loadAdress)
-user_route.get("/addAddress",adressController.loadAddAdress)
+user_route.get("/Address", userAuth.isUserlogin,adressController.loadAdress)
+user_route.get("/addAddress", userAuth.isUserlogin,adressController.loadAddAdress)
 user_route.post("/addAddress",adressController.postloadAddAdress)
+user_route.get("/editAdress/:id", userAuth.isUserlogin,adressController.loadEditAdress)
+user_route.post("/editAdress",adressController.postloadEditAdress)
+user_route.patch("/removeAdress/:id",adressController.removeAdress)
 
+user_route.get("/checkout", userAuth.isUserlogin,orderController.loadCheckout)
+user_route.post("/orderAddress", userAuth.isUserlogin,orderController.getOrderAddress)
+
+user_route.post("/placeOrder", userAuth.isUserlogin,orderController.placeOrder)
+user_route.get("/orderConfirm", userAuth.isUserlogin,orderController.orderConfirm)
+user_route.post( '/verify-payment', userAuth.isUserlogin, orderController.razorpayVerifyPayment )
 
 user_route.get("/loadlogout",userController.loadlogout)
 
 module.exports = user_route
+ 

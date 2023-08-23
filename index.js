@@ -1,5 +1,9 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const mongoose =require("mongoose")
-mongoose.connect("mongodb://127.0.0.1:27017/shoesplanet")
+const databaseUrl = process.env.DATABASE_URL
+mongoose.connect(databaseUrl)
 
 const express=require("express")
 const app= express()
@@ -31,6 +35,10 @@ app.use("/",router)
 
 const adminRoute=require("./routers/adminRoute")
 app.use("/admin",adminRoute)
+
+const errorController = require("./controller/errorController")
+app.use("/500",errorController.get500)
+app.use(errorController.get404)
 
 app.listen(3333,()=>{
     console.log("server is running on , http://localhost:3333/");

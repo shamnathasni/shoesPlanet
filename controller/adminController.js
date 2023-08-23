@@ -72,11 +72,22 @@ console.log(users);
 
 }
 
+
+
 const blockUser = async(req,res)=>{
 
     try {
 
-       await User.updateOne({_id:req.params.id},{$set:{isBlocked:true}})
+        const user = req.params.id
+        const userData = await User.findById(user)
+       await userData.updateOne({$set:{isBlocked:true}})
+   
+       if(req.session.user_id === user){
+
+            delete req.session.user_id
+
+       }
+
        res.redirect("/admin/userlist")
         
     } catch (error) {
