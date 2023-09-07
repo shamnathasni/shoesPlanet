@@ -242,6 +242,30 @@
     </section>
 
 
+<!-- Modal -->
+<div class="modal fade" id="cartAddedModal" tabindex="-1" role="dialog" aria-labelledby="cartAddedModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cartAddedModalLabel">Product Added to Cart</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          The selected product has been added to your cart.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a href="/cart" class="btn btn-primary">Go to Cart</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
@@ -253,6 +277,8 @@
 
         if (response.data.success) {
             console.log('Product added to the cart');
+            // Show the modal when product is added
+                $('#cartAddedModal').modal('show');
             // Handle success, e.g., update the UI to reflect the product added to the cart
         } else if (response.data.loginRequired) {
             window.location = '/login'

@@ -60,6 +60,7 @@ const addtocart = async (req, res) => {
                                 grandTotal:total } }
                     );
                 }
+                return res.json({ success: true, message: "Product added to cart" });
             } else {
                // Product not found in the cart, add it
                await Cart.updateOne(
@@ -77,7 +78,7 @@ const addtocart = async (req, res) => {
                )
             }
               
-            
+            return res.json({ success: true, message: "Product added to cart" });
         } else {
           
             // Cart doesn't exist, create a new cart
@@ -193,7 +194,7 @@ const quantityChange = async(req,res)=>{
             res.json({ success: false, message: "Invalid count value" });
         }    
     } catch (error) {
-        console.log(error.message); 
+        res.redirect("/500")
     }
 }
 

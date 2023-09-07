@@ -10,7 +10,7 @@ const category=async(req,res)=>{
 
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -42,7 +42,7 @@ console.log(6);
 
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -58,7 +58,7 @@ const listCategory = async(req,res)=>{
 
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -73,7 +73,7 @@ const UnlistCategory = async(req,res)=>{
 
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -87,7 +87,7 @@ const editcategory = async(req,res)=>{
         
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -110,7 +110,7 @@ const PostEditcategory = async(req,res)=>{
         
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 } 

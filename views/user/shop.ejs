@@ -21,7 +21,7 @@ form.example button {
   width: 20%;
   padding: 10px;
   background: #dbcc8f;
-  color: #f8f9fa(238, 234, 231);
+  color: #f8f9fa;
   font-size: 17px;
   border: 1px solid #dbcc8f;
   border-left: none; /* Prevent double borders */
@@ -90,8 +90,8 @@ form.example::after {
                 <div class="pricing">
                   <p class="price"><span>₹<%= product.price %></span></p>
                 </div>
-                <p class="bottom-area d-flex px-3">
-                  <a href="/cart/<%=product._id%> " class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
+                <p class="bottom-area d-flex px-3" onclick="addToCart('<%=product._id%>')" >
+                  <a  class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
                   <!-- <a href="#" class="buy-now text-center py-2">Buy now<span><i class="ion-ios-cart ml-1"></i></span></a> -->
                 </p>
               </div>
@@ -149,13 +149,59 @@ form.example::after {
 </section>
 
 
+<!-- Modal for Adding to Cart -->
+<div id="addToCartModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Product Added to Cart</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>The product has been added to your cart.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue Shopping</button>
+        <a href="/cart" class="btn btn-primary">View Cart</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
 <!-- Include Axios library -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
- 
+async function addToCart(product_Id) {
+  let product_quantity = 1
+  try {
+      const response = await axios.post('/addtocart', { product_quantity , product_Id });
+
+      if (response.data.success) {
+          console.log('Product added to the cart');
+          // Show the modal when the product is added to the cart successfully
+          $('#addToCartModal').modal('show');
+          // Handle success, e.g., update the UI to reflect the product added to the cart
+      } else if (response.data.loginRequired) {
+          window.location = '/login'
+          // Handle login required, e.g., redirect the user to the login page
+      } else {
+          console.log('An error occurred while adding the product to the cart');
+          // Handle other errors, e.g., display an error message to the user
+      }
+  } catch (error) {
+      console.error('An error occurred:', error);
+      // Handle network or server errors, e.g., display an error message to the user
+  }
+}
+
 </script>
-
-
 
 <%-include("../layouts/userlayout/footerNav.ejs") %>
 <%-include("../layouts/userlayout/footer.ejs") %>

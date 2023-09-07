@@ -1,58 +1,102 @@
 <%-include("../layouts/userlayout/header.ejs") %>
 <%-include("../layouts/userlayout/nav.ejs") %>
 <style>
-/* your-styles.css */
-
-/* Style for the form container */
-.container {
-  padding: 30px;
+/* styles.css */
+body {
+  background-color: #f7f7f7;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+button{
+  background-color: #dbcc8f;
+    border: none;
+    color: white;
+    padding: 6px 17px;
+    border-radius: 33px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
-/* Style for the "Add Address" button */
-.btn-sm {
-  font-size: 14px;
-}
+ 
+  .container-all {
 
-/* Style for the billing details section */
-.billing-form {
-  border: 1px solid #e6e6e6;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 100%;
+        }
+
+        .left-content {
+     /* Takes up 1/2 of the container */
+
+            justify-content: flex-start;
+            width: 100%;
+            padding: 10px;
+            background-color: #f2f2f2;
+        }
+
+        .right-content {
+           /* Takes up 1/2 of the container */
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: #e0e0e0;
+        } 
+
+.card {
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+.btn {
+  background-color: #3498db;
+  background-color: #fff;
+  border: 1px solid #ddd;
   padding: 20px;
 }
 
-/* Style for the address items */
-#addressContainer {
-  margin-top: 10px;
+.order_box {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
 }
 
-/* Style for the order summary section */
-.your_order {
-  border: 1px solid #e6e6e6;
-  padding: 20px;
+.list {
+  list-style: none;
+  padding-left: 0;
 }
 
-/* Style for the payment method */
-.payment_item {
-  margin-top: 20px;
+.list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
-
-/* Style for the terms and conditions checkbox */
-.creat_account {
-  margin-top: 10px;
-}
-
-/* Style for the "Proceed to Payment" button */
-.primary-btn {
-  background-color: #ff9900;
-  border: none;
+/* .your_order {
   color: #fff;
   padding: 10px 20px;
+  border: none;
   cursor: pointer;
-  font-size: 14px;
+  transition: background-color 0.3s ease;
+} */
+
+.btn:hover {
+  background-color: #2980b9;
+}
+.payment_item {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
 }
 
-/* Hover effect for buttons */
-.btn:hover {
-  opacity: 0.8;
+.radion_btn {
+  display: flex;
+  align-items: center;
+}
+
+.radion_btn label {
+  margin-left: 10px;
 }
 
 
@@ -69,6 +113,63 @@
   </div>
 </div>
 
+<div class="container-all col-12">
+  <div class="row">
+    <div class="left-content col-md-6">
+      <% if(address && address.length > 0) {%>
+      <% for (let items of address) {%>
+        <form id="checkoutform" onsubmit="placeOrder(event)">
+            <section class="checkout_area section_gap">
+                <div class="container">
+                    <div class="row">
+                        <div class="" style="width: 80%;">
+                          
+                            <!-- Billing Details -->
+                            <div class="billing-form">
+                    
+                                <!-- Dynamic addresses will be added here -->
+                                <div id="addressContainer">
+                                    <!-- Address items will be dynamically populated here -->
+    
+                                    <div class="card">
+                                      <div class="card-body">
+                                          <div class="row" >
+                                              <div class="col-md-12"> 
+                                                <input type="radio" name="address"  id="adress<%=items._id%>" value="<%=items._id%>"
+                                                > 
+                                                                         
+                                                  <p>Name: <%=items.name%> <br>
+                                                  mobile: <%=items.mobile%> <br>
+                                                  email: <%=items.email%> <br>
+                                                  <strong>Address:</strong>
+                                                      <%=items.houseName%>,<%=items.landmark%><br>
+                                                      City: <%=items.city%>
+                                                      State: <%=items.state%> <br>
+                                                      Country: <%=items.country%>
+                                                      Postcode / ZIP: <%=items.pincode%>
+                                                  
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </div>
+                                  </div>
+                                  </div>
+                                  
+                            </div>
+                        </div>
+                </div>
+    <%}%>
+    <%}%>
+    
+
+
+
+
+
+
+
+
  <!-- Address Selection and Add Address Button -->
  <button
  type="button"
@@ -78,81 +179,38 @@
 >
  Add Address
 </button>
+</div>
 
-<% if(address && address.length > 0) {%>
-  <% for (let items of address) {%>
-    <form id="checkoutform" onsubmit="placeOrder(event)">
-        <section class="checkout_area section_gap">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-7">
-                      
-                        <!-- Billing Details -->
-                        <div class="billing-form">
-                
-                            <!-- Dynamic addresses will be added here -->
-                            <div id="addressContainer">
-                                <!-- Address items will be dynamically populated here -->
-
-                                <div class="card">
-                                  <div class="card-body">
-                                      <div class="row" >
-                                          <div class="col-md-12"> 
-                                            <input type="radio" name="address"  id="adress<%=items._id%>"
-                                            > 
-                                                                     
-                                              <p>Name: <%=items.name%> <br>
-                                              mobile: <%=items.mobile%> <br>
-                                              email: <%=items.email%> <br>
-                                              <strong>Address:</strong>
-                                                  <%=items.houseName%>,<%=items.landmark%><br>
-                                                  City: <%=items.city%>
-                                                  State: <%=items.state%> <br>
-                                                  Country: <%=items.country%>
-                                                  Postcode / ZIP: <%=items.pincode%>
-                                              
-                                              </p>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  </div>
-                              </div>
-                              </div>
-                              
-                        </div>
-                    </div>
-<%}%>
-<%}%>
-<div class="col-lg-4">
+<!--  -->
+<div class="right-content p-3 col-md-6">
+<div class="col-lg-12">
   <div class="your_order">
     <div class="order_box">
       <h2>Your Order</h2>
       <ul class="list pl-2">
-        <!-- <li>
-                    <a href="#"> <span> </span></a>
-                </li> -->
+        
         <% let sum = 0 %> <% cart[0].product.forEach((carts)=>{ %>
         <li>
 
-          <div class="row pl-2 d-flex justify-content-between">
+          <div class="row pl-2 d-flex justify-content-between" style="width: 100%; color: rgb(75, 75, 75);">
+            <div>
 
-            <a href="#"><%=carts.product_Id.name %> </a>
-            <span class="last">x<%= carts.quantity %></span>
-            <span class="last">₹ <%= carts.total %></span>
+              <a href="#" style="color: #292929;"><strong><%=carts.product_Id.name %></strong> </a>
+              <span class="last pl-2">   ( x<%= carts.quantity %> )</span>
+            </div>
+            <div class="fw-20">
+
+              <span class="last"><strong>₹ <%= carts.total %></strong></span>
+            </div>
           </div>
         </li>
         <% }) %>
       </ul>
       <ul class="list list_2 pl-2">
-        <!-- <li>
-        <a href="#">Subtotal <span>$2160.00</span></a>
-      </li> -->
-        <!-- <li>
-        <a href="#">Shipping <span>Flat rate: $50.00</span></a>
-      </li> -->
+        
         <li>
        
-            Total <span>₹ <%= cart[0].grandTotal %></span>
+            <h5><strong>Total</strong></h5> <span><h5><strong>₹ <%= cart[0].grandTotal %></strong></h5></span>
           
         </li>
       </ul>
@@ -174,29 +232,37 @@
           <input type="radio" id="Razorpay" name="paymentMethod" value="Razorpay" />
           <label for="f-option6">Razorpay </label>
           <img
-            src="img/product/c.jpg"
+            src="productImages/bg-1.png"
             style="font-family: sans-serif"
             alt=""
           />
           <div class="check"></div>
         </div>
         <p style="color: rgb(102, 101, 101)">
+          
                  Pay via Razorpay; you can pay with your credit card if you
                   don’t have a Razorpay account.
                 </p>
               </div>
-              <div class="creat_account">
-                <input type="checkbox" id="f-option4" name="selector" />
-                <label for="f-option4">I’ve read and accept the </label>
-                <a href="#">terms & conditions*</a>
+              <div class="payment_item">
+                <div class="radion_btn">
+                  <input type="radio" id="COD" name="paymentMethod" value="COD" />
+                  <label for="f-option5">Wallet</label>
+                  <div class="check"></div>
+                  
+                </div>
+                <p style="color: rgb(105, 104, 104)">
+                  Pay with wallet and the product is delivered to your doorstep.
+                </p>
               </div>
-              <button onclick="placeOrder()" class="site-btn">PLACE ORDER</button>
+              <button class="site-btn">PLACE ORDER</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
 
 
@@ -212,9 +278,7 @@
       <h5 class="modal-title" id="addressModalLabel">
         Add Address
       </h5>
-      <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button> -->
+      
     </div>
     
     <div class="modal-body">
@@ -297,10 +361,13 @@ aria-hidden="true" data-backdrop="true">
 
     <!-- Include your JavaScript scripts here -->
 <!-- Include your JavaScript scripts here -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
   async function placeOrder() {
+    event.preventDefault()
     try {
       let addressId = document.querySelector("input[name=address]:checked");
       let paymentMethodRadio = document.querySelector('input[name=paymentMethod]:checked');
@@ -310,25 +377,25 @@ aria-hidden="true" data-backdrop="true">
         alert("Please select an address and payment method.");
         return;
       }
-
+      let addressIdInput = document.querySelector("input[name=address]:checked");
+      
+      let address = addressIdInput.value
       console.log(111);
-      console.log(addressId, paymentMethodRadio, grandTotal);
-
-
-      const address = addressId.value
+      console.log(address, paymentMethodRadio.value, grandTotal);
       const paymentMethod = paymentMethodRadio.value
 
       $.ajax({
         url: '/placeOrder',
         method: 'post',
         data: {
-          address: address ,paymentMethod ,grandTotal,
+           address ,paymentMethod ,grandTotal,
         },
         success: (response) => {
           if (response.Success == true) {
-            location.href = '/orderConfirm';
+            location.href = '/confirmOrder';
           }else{
-            razorpayPayment(order.payment)
+            console.log(response);
+            razorpayPayment(response.payment)
           }
         }
       });
@@ -337,15 +404,15 @@ aria-hidden="true" data-backdrop="true">
     }
   }
 
-  // Move the event listener here
-  $("#checkoutform").submit((e) => {
-    e.preventDefault();
-    placeOrder(); // Call the placeOrder function when the form is submitted
-  });
+  // // Move the event listener here
+  // $("#checkoutform").submit((e) => {
+  //   e.preventDefault();
+  //   placeOrder(); // Call the placeOrder function when the form is submitted
+  // });
 
 
 function razorpayPayment( order ) {
-
+console.log(order,'order');
 const rzp_key = '<%= process.env.RAZORPAY_KEY_ID %>'
 
 
@@ -377,7 +444,7 @@ async function verifyPayment ( response, order){
         order
     })
     if( result.data.paid ) {
-        window.location = '/confirm-order'
+        window.location = '/confirmOrder'
     } else {
         window.location = '/orders'
         const modal = document.getElementById('modalCookie1')

@@ -49,7 +49,9 @@ user_route.post("/addtocart", cartController.addtocart)
 user_route.get("/deleteCartProduct",cartController.deleteCart)
 user_route.post("/quantityChange",cartController.quantityChange)
 
-user_route.get("/userProfile",userController.loadProfile)
+user_route.get("/userProfile", userAuth.isUserlogin,userController.loadProfile)
+user_route.get("/editProfile/:id", userAuth.isUserlogin,userController.loadEditProfile)
+user_route.post("/editProfile", userController.postEditProfile)
 
 user_route.get("/Address", userAuth.isUserlogin,adressController.loadAdress)
 user_route.get("/addAddress", userAuth.isUserlogin,adressController.loadAddAdress)
@@ -62,8 +64,16 @@ user_route.get("/checkout", userAuth.isUserlogin,orderController.loadCheckout)
 user_route.post("/orderAddress", userAuth.isUserlogin,orderController.getOrderAddress)
 
 user_route.post("/placeOrder", userAuth.isUserlogin,orderController.placeOrder)
-user_route.get("/orderConfirm", userAuth.isUserlogin,orderController.orderConfirm)
 user_route.post( '/verify-payment', userAuth.isUserlogin, orderController.razorpayVerifyPayment )
+user_route.post('/verify-payment',userAuth.isUserlogin,orderController. razorpayVerifyPayment )
+
+user_route.get("/confirmOrder",userAuth.isUserlogin,orderController.orderConfirm)
+user_route.get("/orderDetails",orderController.loadOrderDetails)
+user_route.patch("/orderCancel",orderController.cancelOrder)
+
+user_route.get("/myWallet",userAuth.isUserlogin,userController.loadWallet)
+
+user_route.get("/invoice",userController.loadInvoice)
 
 user_route.get("/loadlogout",userController.loadlogout)
 

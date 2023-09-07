@@ -1,0 +1,48 @@
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div><a class="badge badge-outline-primary" href="/admin/orderlist">Back to orders</a></div>
+        <div class="row mt-5">
+            <div class="col-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for ( let items of orderedproducts.products ){ %>
+                           
+                            <tr>
+                                <td>
+                                    <img style="width:100px; height: auto;border-radius: 0;" src="/productImages/<%= items.productId.image[0] %>" alt="">
+                                </td>
+                            <td><%= items.productId.name %></td>
+                          
+                            <td><%= items.productId.price %></td>
+                            <td><%= items.quantity %></td>
+                            <td><%=  items.price%></td>
+                            
+                            </tr>
+
+                        <% } %>
+                      
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+    </div>
+</div>

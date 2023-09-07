@@ -2,6 +2,7 @@ const User = require("../models/userModels");
 const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
 const Cart = require("../models/cartModel")
+const Order = require ("../models/orderModel")
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const randomstring = require("randomstring");
@@ -9,6 +10,12 @@ const otpGenerator = require("otp-generator");
 const nodemailer = require("nodemailer");
 const mongoose = require("mongoose")
 // const c = require("config");
+const ejs = require("ejs");
+const puppeteer = require("puppeteer");
+const fs = require("fs");
+const path = require("path");
+const { log } = require("console");
+
 
 dotenv.config();
 
@@ -309,7 +316,7 @@ const loadhome = async (req, res) => {
       res.render("user/home");
   
   } catch (error) {
-    console.log(error.message);
+    res.redirect("/500")
   }
 };
 
@@ -337,22 +344,23 @@ const loadhome = async (req, res) => {
         
           
       const productCount = await Product.find(condition).count()
-      const productData = await Product.find(condition).populate("category").skip((page-1)*(5)).limit(5)
+      const productData = await Product.find(condition).populate("category").skip((page-1)*(6)).limit(6)
       
       const category = await Category.find({status:true})
       res.render("user/shop",{productData,category,
         currentPage:page,
         totalCount:productCount,
-        hasNextpage:page*5<productCount,
+        hasNextpage:page*6<productCount,
         haspreviouspage:page>1,
         nextPage:page+1,
         previousPage:page-1,
-        lastPage:Math.ceil(productCount / 5),
+        lastPage:Math.ceil(productCount / 6),
         cat:cat,
         search:search
       });
     } catch (error) {
       console.log(error.message);
+      res.redirect("/500")
     }
   };
 
@@ -375,9 +383,92 @@ const loadProfile = async(req,res) => {
       res.render("user/userProfile",{user:user})
       
     } catch (error) {
-      console.log(error.message)
+      res.redirect("/500")
     }
+}
 
+
+const loadEditProfile = async(req,res)=>{
+  try {
+    const profileId = req.params.id
+    console.log(req.params);
+    const profile = await User.findOne({_id:profileId})
+    console.log(profile);
+    res.render("user/editProfile",{user:profile})
+  } catch (error) {
+    res.redirect("/500")
+    console.log(error.message);
+  }
+}
+
+
+const postEditProfile = async(req,res)=>{
+  try {
+    const  profileId  = req.session.user_id
+    const editedProfile = await User.updateOne({ _id : profileId },{
+      $set :
+      {
+        name: req.body.name ,
+        email : req.body.email ,
+        mobile : req.body.mobile
+      }
+    })
+    res.redirect("/userProfile")
+  } catch (error) {
+    res.redirect("/500")
+    console.log(error.message);
+  }
+}
+
+
+const loadWallet = async (req,res) => {
+  try {
+    const {user_id} = req.session
+    const user = await User.findOne({_id:user_id})
+    
+    res.render("user/myWallet",{user})
+  } catch (error) {
+    res.redirect("/500")
+  }
+}
+
+const loadInvoice = async ( req,res ) => {
+  try {
+    const { orderId } = req.query
+    const { user_id } = req.session
+    console.log(orderId+"$$$$$");
+    console.log(user_id+"2");
+    const userData = await User.findOne({_id : user_id})
+    console.log(userData+"UUUUU");
+    const orderData = await Order.findOne({ _id : orderId }).populate("products.productId")
+    console.log(orderData+"OOOOO");
+    const date = new Date()
+    const data = {
+      user : userData ,
+      order : orderData ,
+      date,
+    }
+console.log(data+"DDDDDD");
+    const filepathName = path.resolve(__dirname, "../views/user/invoice.ejs");
+    const html = fs.readFileSync(filepathName).toString();
+    const ejsData = ejs.render(html, data);
+    const browser = await puppeteer.launch({ headless: "new" });
+    const page = await browser.newPage();
+    await page.setContent(ejsData, { waitUntil: "networkidle0" });
+    const pdfBytes = await page.pdf({ format: "Letter" });
+    await browser.close();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename= orderInvoice_shoesplanet.pdf"
+    );
+    res.send(pdfBytes);
+
+  } catch (error) {
+    res.redirect("/500")
+    console.log(error.message);
+  }
 }
 
 const loadlogout = async (req, res) => {
@@ -417,6 +508,10 @@ module.exports = {
   loadshop,
   loadSingleProduct,
   loadProfile,
+  loadEditProfile,
+  postEditProfile,
+  loadWallet,
+  loadInvoice,
   loadlogout,
 
 };

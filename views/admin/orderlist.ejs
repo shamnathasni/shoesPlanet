@@ -1,0 +1,171 @@
+<%- include("../layouts/adminLayout/header.ejs") %>
+<%- include("../layouts/adminLayout/navbar.ejs") %>
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Order List</h2>
+            <p>Lorem ipsum dolor sit amet.</p>
+        </div>
+        <div>
+            <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row gx-3">
+                <div class="col-lg-4 col-md-6 me-auto">
+                    <input type="text" placeholder="Search..." class="form-control" />
+                </div>
+                <div class="col-lg-2 col-6 col-md-3">
+                    <select class="form-select">
+                        <option>Status</option>
+                        <option>Active</option>
+                        <option>Disabled</option>
+                        <option>Show all</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-6 col-md-3">
+                    <select class="form-select">
+                        <option>Show 20</option>
+                        <option>Show 30</option>
+                        <option>Show 40</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                        
+                            <th scope="col">Name</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">paymentMethod</th>
+                            <th scope="col">Status</th>
+                            <th></th>
+                           
+                            <th></th>
+                           
+                        </tr>
+                    </thead>
+                    <%for(let items of order){%>
+                    <tbody> 
+                        <tr>
+                            <td>
+                            <% for( let item of items.products) {%>
+                            <li><%=item.productId.name%>-- <strong style="color: black;">₹<%=item.productId.price%></strong></li>
+                            <% } %>
+                        </td>
+                            <td><%=items.totalPrice%></td>
+                            <td><%=items.paymentMethod%></td>
+                            <td id="order-status-<%=items._id%>"><%if(items.orderStatus) {%>  <%= items.orderStatus %> <%}else {%> <%= pending %> <%}%> </td>
+                            <td>
+                                <% if( items.orderStatus === 'Confirmed' || items.orderStatus === 'Shipping' ){ %>
+                               
+                                    <div class="w3-dropdown-hover" id="dropdown-<%= items._id %>">
+                                        <button class="w3-button">status</button>
+                                        <div class="w3-dropdown-content w3-bar-block w3-border">
+                                            <% if( items.orderStatus === 'Confirmed'){ %>
+                                          <a href="#" class="w3-bar-item w3-button" id="delivered-<%= items._id %>" onclick="changeOrderStatus('Delivered','<%= items._id %>')" class="text-dark dropdown-item">Delivered</a>
+                                          <a href="#" class="w3-bar-item w3-button"id="shipping-<%= items._id %>" onclick="changeOrderStatus('Shipping','<%= items._id %>')" class="text-dark dropdown-item">Shipping</a>
+                                          <a href="#" class="w3-bar-item w3-button"id="cancelled-<%= items._id %>" onclick="changeOrderStatus('Cancelled','<%= items._id %>')" class="text-dark dropdown-item">Cancelled</a>
+                                          <% } else { %>
+                                            <% if( items.orderStatus === 'Shipping' ){ %>
+                                                <a href="#" class="w3-bar-item w3-button"  id="delivered-<%= items._id %>" onclick="changeOrderStatus('Delivered','<%= items._id %>')" class="text-dark dropdown-item">Delivered</a>
+                                                <a href="#" class="w3-bar-item w3-button"id="cancelled-<%= items._id %>" onclick="changeOrderStatus('Cancelled','<%= items._id %>')" class="text-dark dropdown-item">Cancelled</a>
+                                                <% } %>
+                                                <% } %>
+                                            </div>
+                                      </div>
+                                      <% } else if ( items.orderStatus === 'Pending' ) { %>
+                                        <div class="w3-dropdown-hover" id="dropdown-<%= items.userId %>">
+                                            <button class="w3-button">status</button>
+                                            <div class="w3-dropdown-content w3-bar-block w3-border">
+                                                <a href="#" class="w3-bar-item w3-button"id="cancelled-<%= items.userId %>" onclick="changeOrderStatus('Cancelled','<%= items._id %>')" class="text-dark dropdown-item">Cancelled</a>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                            </td>   
+      
+                            <td></td>
+                           
+                            <td class="text-end">
+                                <a href="/admin/orderedProduct/<%=items._id%>" class="btn btn-md rounded font-sm">Detail</a> 
+                            
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- The popup message modal -->
+<div id="popupModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-light text-dark">
+        <div class="modal-body">
+        <h5 id="modalHead" class="modal-title"></h5><br>
+        <p id="modalContent"></p>
+        </div>
+    </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+    // const delivered = document.getElementById(`delivered-${orderId}`)
+    // const shipping = document.getElementById(`shipping-${orderId}`)
+    // const cancelled = document.getElementById(`cancelled-${orderId}`)
+
+    async function changeOrderStatus(status,orderId){
+        console.log(status);
+        const changeStatus = await axios.patch('/admin/change-order-status',{status,orderId})
+        if( changeStatus.data.status === 'Shipping'){
+            const shipping = document.getElementById(`shipping-${orderId}`)
+            const orderStatus = document.getElementById(`order-status-${orderId}`)
+            orderStatus.innerHTML = changeStatus.data.status
+            shipping.style.display = 'none'
+            showModal( 'success', 'Status updated' )
+        }
+        if(changeStatus.data.status === 'Delivered' || changeStatus.data.status === 'Cancelled'){
+            const dropdown = document.getElementById(`dropdown-${orderId}`)
+            const orderStatus = document.getElementById(`order-status-${orderId}`)
+            orderStatus.innerHTML = changeStatus.data.status
+            dropdown.style.display = 'none'
+            showModal( 'success', 'Status updated' )
+        }
+    }
+
+    function showModal(title,message) {
+
+    const modalTitle = document.getElementById('modalHead')
+    const modalBody = document.getElementById('modalContent')
+
+    modalTitle.innerText = title;
+    modalBody.innerText = message;
+
+
+    // Show the popup message modal
+    $('#popupModal').modal('show');
+
+    // Hide the popup message modal when clicking outside of it
+    $(document).on('click', function(event) {
+    if (!$(event.target).closest('.modal-content').length) {
+    $('#popupModal').modal('hide');
+    }
+    });
+
+    }
+</script>
+
+<%-include("../layouts/adminLayout/footer.ejs")%>

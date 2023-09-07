@@ -33,19 +33,13 @@ const orderSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-
-    amountPayable : {
-        type : Number,
-        required : false
-    },
-
     orderStatus : {
         type : String,
         default : 'Pending'
     },
 
     address : {
-        type : mongoose.Schema.Types.ObjectId,
+        type : mongoose.Schema.Types.ObjectId, 
         ref : 'Adress',
         required : true
     },
@@ -55,7 +49,8 @@ const orderSchema = new mongoose.Schema({
         default : Date.now
     },
 
-
-})
+},
+{ timestamps: true }
+)
 
 module.exports = mongoose.model('Order',orderSchema)

@@ -7,7 +7,7 @@ const loadAdress = async(req,res) => {
         res.render("user/address",{ data:adresssData })
         
     } catch (error) {
-       console.log(error.message); 
+        res.redirect("/500")
     }
 }
 
@@ -16,7 +16,7 @@ const loadAddAdress = async(req,res)=>{
         res.render("user/addAdress")
         
     } catch (error) {
-        console.log(error.message);  
+        res.redirect("/500")
     }
 }
 
@@ -48,7 +48,9 @@ console.log(req.body);
         res.redirect("/Address")
 
     } catch (error) {
-        console.log(error.message);  
+        console.log(error.message);
+        res.redirect("/500")
+
     }
 }
 
@@ -87,7 +89,7 @@ const postloadEditAdress = async(req,res) => {
             res.redirect("/address")
         
     } catch (error) {
-        console.log(error.message);  
+        res.redirect("/500")
     }
 }
 
@@ -108,7 +110,7 @@ const removeAdress = async(req,res) =>{
         })
         res.status(200).json({success:true})
     } catch (error) {
-        console.log(error.message);  
+        res.redirect("/500")
     }
 }
 

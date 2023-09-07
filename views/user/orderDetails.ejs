@@ -1,0 +1,173 @@
+<%-include("../layouts/userlayout/header.ejs") %>
+<%-include("../layouts/userlayout/nav.ejs") %>
+
+<style>
+  /* Add this CSS to your stylesheet or in a <style> tag in your HTML document */
+
+.order-table, .product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.order-table th, .product-table th {
+  background-color: #f2f2f2;
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.order-table td, .product-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.invoice-btn {
+  text-decoration: underline;
+  font-weight: 900;
+  color: blue;
+}
+
+.invoice-btn:hover {
+  color: darkblue;
+}
+
+</style>
+
+
+<section class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg');">
+  <div class="container">
+    <div class="row no-gutters slider-text align-items-center justify-content-center">
+      <div class="col-md-9 ftco-animate text-center">
+      
+        <h1 class="mb-0 bread">Order Details</h1>
+      </div>
+    </div>
+  </div>
+</section>
+  <!-- Your existing navigation content -->
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="order-details">
+          <% for (let order of orderlist) { %>
+         
+          <div class="card mt-4" style="font-weight: 700;">
+            <div class="card-header" style="background-color: rgb(102, 102, 102); color: #fff;">
+              <strong>Order ID: <%= order._id %></strong>
+            </div>
+            <div class="card-body">
+              <p>Amount: <%= order.totalPrice %></p>
+              <p>Payment Method: <%= order.paymentMethod %></p>
+              <p id="order-status-<%order._id%>">Status: <%= order.orderStatus %></p>
+              <h3>Products</h3>
+              <table class="table table-bordered product-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (let product of order.products) { %>
+                  <tr>
+                    <td class="p-0">
+                      <img style="width:100px; height: auto;border-radius: 0;" src="/productImages/<%= product.productId.image[0] %>" alt="">
+                  </td>
+                    <td class="p-0"><%= product.productId.name %></td>
+                    <td class="p-0"><%= product.productId.price %></td>
+                    <td class="p-0"><%= product.quantity %></td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer" style="display: inline-flex; justify-content: space-between;">
+              <!-- <a href="/invoice?orderId=<%=order._id  %>" class="invoice-btn">Download Invoice</a> -->
+              <button class="btn btn-info" value="/invoice?orderId=<%=order._id  %>">Download Invoice</button>
+              <% if ( order.orderStatus === "Delivered" )  {%>               
+                <button class="btn btn-primary"  value="/orderCancel?orderId=<%=order._id%>">return</button>
+                <% } else if( order.orderStatus === "Cancelled" ) { %>
+                  <button class="btn btn-danger" >Cancelled</button>              
+                  <%} else {%>
+                <button class="btn btn-danger" id="order-status-<%=order._id%>" onclick="orderCancel('<%= order._id %>')" >Cancel</button>              
+              <%}%>              
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  async function orderCancel(orderId){
+    try {
+      console.log(orderId);
+      const status = "Cancelled"
+      const cancel = await axios.patch("/orderCancel",{orderId,status})
+      if (cancel.data.success){
+                console.log(1);
+                // const cancelButton = document.getElementById(`cancel-${orderId}`)
+                const order_status = document.getElementById(`order-status-${orderId}`)
+                // cancelButton.style.display = 'none'
+                order_status.innerHTML = cancel.data.status
+            }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+</script>
+
+
+<%-include("../layouts/userlayout/footerNav.ejs") %>
+<%-include("../layouts/userlayout/footer.ejs") %>
+
+
+
+
+
+
+
+
+<!-- 
+<body class="goto-here">
+
+
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12"> 
+        <div class="order-details">
+          <% for (let order of orderlist) { %>
+          <h3>Order Details</h3>
+          <div class="order">
+              <p>Order ID: <%= order._id %></p>
+              <p>Amount: <%= order.totalPrice %></p>
+              <p>Payment Method: <%= order.paymentMethod %></p>
+              <p>Status: <%= order.orderStatus %></p>
+
+              <h4>Products</h4>
+              <ul>
+                  <li><%= order.products[0].productId.name %> price: <%= order.products[0].productId.price %> quantity :<%= order.products[0].quantity %></li>
+                
+              </ul>
+            </div>
+            <a class="d-flex justify-content-start" style="text-decoration: underline; font-weight: 900;"
+            href="/invoice?orderId=<%=order._id  %>"
+         
+            class="invoice-btn">Download Invoice</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+
+

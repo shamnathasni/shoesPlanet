@@ -3,6 +3,7 @@ const Category = require("../models/categoryModel");
 const { name } = require("ejs");
 const fs = require("fs")
 const path = require("path")
+const sharp = require("sharp")
 
 const loadproducts=async(req,res)=>{
 
@@ -29,7 +30,7 @@ const loadproducts=async(req,res)=>{
    
     } catch (error) {
         
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -43,7 +44,7 @@ const addproduct=async(req,res)=>{
         
     } catch (error) {
         
-        console.log(error.message);
+        res.redirect("/500")
         
     }
     
@@ -53,7 +54,8 @@ const addproduct=async(req,res)=>{
 const postAddProduct=async(req,res)=>{
     
     try {
-
+        // const { name,category,description,price,availability}=req.body
+        // console.log(req.file);
         for(let file of req.files) {
             if( 
                 file.mimetype !== 'image/jpg' &&
@@ -65,13 +67,20 @@ const postAddProduct=async(req,res)=>{
                     return res.redirect('/admin/addproducts')
                 }
             }
-
-        const image = []
-        for(let items of req.files){
-             
-            image.push(items.filename)
-        }
-        const { name,category,description,price,availability}=req.body
+            console.log(req.files,"this is files");
+            const image = []
+            for(let items of req.files){
+                
+                    image.push(items.filename)
+                }
+                const { name,category,description,price,availability}=req.body
+                // if(req.files && req.files.length >0){
+                //     for(let i=0;i<req.files.length;i++){
+                //     const filePath = path.join(__dirname,'../public/productImages',req.files[i].filename)
+                //         await sharp(req.files[i].path).resize({width:250,height:250}).toFile(filePath)
+                //         image.push(req.files[i].filename)
+                //     }
+                // }
 
 
         const newproduct=new Product({
@@ -85,12 +94,12 @@ const postAddProduct=async(req,res)=>{
         })
        
         const savedProduct=await newproduct.save()
-        console.log(savedProduct);
+        // console.log(savedProduct);
         res.redirect("/admin/products") 
 
     } catch (error) {
-
         console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -104,7 +113,7 @@ const deleteProduct = async(req,res)=>{
         
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -117,7 +126,7 @@ const restoreProduct = async(req,res)=>{
         
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -134,7 +143,7 @@ const editproduct = async(req,res)=>{
         
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -158,7 +167,7 @@ const deleteImage = async(req,res)=>{
         
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
@@ -207,7 +216,7 @@ const postEditProduct = async(req,res)=>{
 
     } catch (error) {
 
-        console.log(error.message);
+        res.redirect("/500")
         
     }
 }
