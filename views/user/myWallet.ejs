@@ -108,6 +108,7 @@
   <section class="product-section" id="reloadData">
     <h4>wallet balance:<strong> <%=user.wallet%></strong></h4>
     <table>
+      <% if (user.wallet !== 0) {%>
       <thead style="font-weight: 900 ; color: black;">
         <tr>
           <th>Date</th>
@@ -131,6 +132,7 @@
         <% }); %>
       </tbody>
     </table>
+    <%}%>
     <div>       
   </div>
   </section>

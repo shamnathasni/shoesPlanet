@@ -46,7 +46,7 @@ user_route.get("/singleproduct/:id",userController.loadSingleProduct)
 
 user_route.get("/cart", userAuth.isUserlogin, cartController.loadCart)
 user_route.post("/addtocart", cartController.addtocart)
-user_route.get("/deleteCartProduct",cartController.deleteCart)
+user_route.patch("/deleteCartProduct",cartController.deleteCart)
 user_route.post("/quantityChange",cartController.quantityChange)
 
 user_route.get("/userProfile", userAuth.isUserlogin,userController.loadProfile)

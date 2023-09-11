@@ -214,12 +214,27 @@ button{
           
         </li>
       </ul>
+
     
       <input type="hidden" id="grandTotal" name="grandTotal" value="<%= cart[0].grandTotal %>" />
+<%if(cart[0].userId.wallet !== 0 ) {%>
+      <div class="payment_item">
+        <div class="radion_btn">
+          <input type="radio" id="Wallet" name="Wallet" value="<%= cart[0].userId.wallet %>" />
+          <label for="f-option7"><strong>Wallet</strong></label>
+          <div class="check"></div>
+        </div>
+        <p style="color: rgb(102, 101, 101)">
+          Pay using your wallet balance.
+        </p>
+        <!-- Display Wallet Amount -->
+        <p>Your Wallet Balance: <strong> ₹ <%= cart[0].userId.wallet %></strong></p>
+      </div>
+<%}%>  
       <div class="payment_item">
         <div class="radion_btn">
           <input type="radio" id="COD" name="paymentMethod" value="COD" />
-          <label for="f-option5">COD</label>
+          <label for="f-option5"><strong>COD</strong></label>
           <div class="check"></div>
           
         </div>
@@ -230,9 +245,9 @@ button{
       <div class="payment_item active">
         <div class="radion_btn">
           <input type="radio" id="Razorpay" name="paymentMethod" value="Razorpay" />
-          <label for="f-option6">Razorpay </label>
+          <label for="f-option6"><strong>Razorpay</strong> </label>
           <img
-            src="productImages/bg-1.png"
+            src="/public/productImages/download.png"
             style="font-family: sans-serif"
             alt=""
           />
@@ -244,17 +259,7 @@ button{
                   don’t have a Razorpay account.
                 </p>
               </div>
-              <div class="payment_item">
-                <div class="radion_btn">
-                  <input type="radio" id="COD" name="paymentMethod" value="COD" />
-                  <label for="f-option5">Wallet</label>
-                  <div class="check"></div>
-                  
-                </div>
-                <p style="color: rgb(105, 104, 104)">
-                  Pay with wallet and the product is delivered to your doorstep.
-                </p>
-              </div>
+              
               <button class="site-btn">PLACE ORDER</button>
             </div>
           </div>
@@ -371,8 +376,13 @@ aria-hidden="true" data-backdrop="true">
     try {
       let addressId = document.querySelector("input[name=address]:checked");
       let paymentMethodRadio = document.querySelector('input[name=paymentMethod]:checked');
-      let grandTotal = parseInt(document.querySelector('input[name=grandTotal]').value);
-
+      // let grandTotal = parseInt(document.querySelector('input[name=grandTotal]').value);
+      const walletCheckbox = document.querySelector('input[name="Wallet"]:checked');
+        let walletAmount
+        if( walletCheckbox ) {
+             walletAmount = walletCheckbox.value
+        }
+console.log(walletAmount,"www");
       if (!paymentMethodRadio || !addressId) {
         alert("Please select an address and payment method.");
         return;
@@ -381,21 +391,21 @@ aria-hidden="true" data-backdrop="true">
       
       let address = addressIdInput.value
       console.log(111);
-      console.log(address, paymentMethodRadio.value, grandTotal);
+      console.log(address, paymentMethodRadio.value, walletAmount);
       const paymentMethod = paymentMethodRadio.value
 
       $.ajax({
         url: '/placeOrder',
         method: 'post',
         data: {
-           address ,paymentMethod ,grandTotal,
+           address ,paymentMethod ,walletAmount //grandTotal,
         },
-        success: (response) => {
-          if (response.Success == true) {
+        success: (order) => {
+          if (order.success) {
             location.href = '/confirmOrder';
           }else{
-            console.log(response);
-            razorpayPayment(response.payment)
+            console.log(order);
+            razorpayPayment(order.payment)
           }
         }
       });

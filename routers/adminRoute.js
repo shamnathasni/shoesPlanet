@@ -26,7 +26,7 @@ admin_route.get("/Unlist-category/:id",adminAuth.isAdminlogin,categoryController
 
 admin_route.get("/products",adminAuth.isAdminlogin,productController.loadproducts)
 admin_route.get("/addproduct",adminAuth.isAdminlogin,productController.addproduct)
-admin_route.post("/addproduct",upload.upload.array("image",4),productController.postAddProduct)
+admin_route.post("/addproduct", adminAuth.isAdminlogin,upload.upload.array("image",4),productController.postAddProduct)
 admin_route.get("/delete-product/:id", adminAuth.isAdminlogin, productController.deleteProduct)
 admin_route.get("/restore-product/:id", adminAuth.isAdminlogin, productController.restoreProduct)
 admin_route.get("/editproduct/:id",productController.editproduct)

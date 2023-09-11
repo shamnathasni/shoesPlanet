@@ -1,12 +1,13 @@
 // const { name } = require("ejs");
 const Category = require("../models/categoryModel");
-
+const Product = require("../models/productModel")
 const category=async(req,res)=>{
 
     try {
 
        const categoriesData = await Category.find({})
-       res.render("admin/category",{categoriesData})
+    //    console.log(req.flash('message'));
+       res.render("admin/category",{categoriesData ,status : req.flash('status'), message : req.flash("message")})
 
     } catch (error) {
 
@@ -17,7 +18,7 @@ const category=async(req,res)=>{
 const addcategory = async(req,res)=>{
     try {
 
-        res.render("admin/addcategory")
+        res.render("admin/addcategory",)
 
     } catch (error) {
 
@@ -27,21 +28,29 @@ const addcategory = async(req,res)=>{
 }
 
 const postaddcategory = async(req,res)=>{
-console.log(6);
+
     try {
 
         const {name} = req.body
-
+        const Name = name.toUpperCase()
+        const category = await Category.findOne({name:Name}) 
+        if(!category){
         const newCategory= new Category({
-            name
+            name:Name
         })
+        await newCategory.save()
 
-      await newCategory.save()
-      console.log(newCategory);
+      req.flash("message","category added successfully")
+      req.flash('status','true')
+      res.redirect("/admin/category")
+    }else{
+        req.flash("message","category already exist")
+        req.flash('status','false')
         res.redirect("/admin/category")
+    }
 
     } catch (error) {
-
+console.log(error.message);
         res.redirect("/500")
         
     }

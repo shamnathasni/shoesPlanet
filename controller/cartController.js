@@ -9,7 +9,7 @@ const loadCart = async(req,res)=>{
         const userId = req.session.user_id 
         const product = await Product.find({status:true})  
         const cartData = await Cart.findOne({userId:userId}).populate("product.product_Id")
-// console.log(cartData.product[0].product_Id+"2cartdata");
+console.log(cartData);
 
         res.render("user/cart",{cartData:cartData,product:product})
     } catch (error) {
@@ -107,31 +107,48 @@ const addtocart = async (req, res) => {
 
 
 
-const deleteCart = async(req,res)=>{
+const deleteCart = async (req, res) => {
     try {
-        const id = req.query.id
-        const userId = req.session.user_id
-            
-        const cartData = await Cart.findOne({userId:userId})
-        if (cartData) {
-            const deletedProduct = cartData.product.find(
-                (item) => item.product_Id.toString() === id
-            );
-        const total = deletedProduct.total
-        
-            await Cart.findOneAndUpdate(
-                {userId:userId},
-                {
-                    $pull:{product:{product_Id:id}},
-                    $inc:{count:"-1",grandTotal:-total}
-                    
-                }
-                )}
-                console.log(id);
+      const id = req.query.id;
+      const userId = req.session.user_id;
+  
+      // Find the total price of the product to be removed
+      const total = await Cart.findOne(
+        { userId: userId, "product._id": id },
+        { "product.$": 1 } // Projection to select only the relevant product
+      );
+  
+      if (!total) {
+        return res.status(404).json({ success: false, message: "Product not found in the cart." });
+      }
+  
+      // Update the cart to remove the product and decrease the grandTotal
+      const cartData = await Cart.updateOne(
+        { userId: userId, "product._id": id },
+        {
+          $pull: { product: { _id: id } },
+          $inc: { grandTotal: -total.product[0].total }
+        }
+      );
+  
+      // Find the updated cart data
+      const cart = await Cart.findOne({ userId: userId });
+  
+      // If the cart is empty after removing the product, delete the cart
+      if (!cart || cart.product.length < 1) {
+        await Cart.deleteOne({ userId: userId });
+      }
+  
+      console.log("Total Price of Removed Product:", total.product[0].total);
+      console.log("Updated Cart Data:", cart);
+  
+      return res.status(200).json({ success: true, message: 'Item removed', grandTotal: cart ? cart.grandTotal : 0 });
     } catch (error) {
-        console.log(error.message);
+      console.error(error.message);
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
-}
+  };
+  
 
 const quantityChange = async(req,res)=>{
     try {

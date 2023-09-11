@@ -21,9 +21,9 @@
 </div>
 
 <section class="ftco-section ftco-cart">
-  <div class="container">
+  <div class="container" id="cart-table">
     <% if( cartData && cartData.product.length > 0 ) { %>
-    <div class="row">
+    <div class="row" >
       <div class="col-md-12 ftco-animate">
         <div class="cart-list">
           <table class="table"id="reloadDiv" > 
@@ -42,13 +42,13 @@
 
               <tr class="text-center" id="cart-row-<%= item._id %>">
                 <td class="product-remove">
-                  <a href="/deleteCartProduct?id=<%=item.product_Id._id%>"><span class="ion-ios-close"></span></a>
+                  <a onclick="deleteProduct('<%= item._id %>')"><span class="ion-ios-close"></span></a>
                 </td>
 
                 <td class="image-prod">
                   <div class="img">
                     <img
-                      src="/productImages/<%= item.product_Id.image %>"
+                      src="/croppedImg/<%= item.product_Id.image %>"
                       width="100"
                       alt=""
                     />
@@ -125,7 +125,7 @@
           <hr />
           <p class="d-flex total-price">
             <span>Total</span>
-            <span>₹<%=cartData.grandTotal%></span>
+            <span id="total">₹<%=cartData.grandTotal%></span>
           </p>
         </div>
         <p class="text-center">
@@ -141,11 +141,61 @@
       <br />
       <h3 class="text-center shop-now"><a href="/shop">Shop now</a></h3>
     </div>
-    <% } %>
+    <% } %>       
+     <div style="display: none;" class="col-12 mt-5" id="empty-cart">
+       <h1 class="text-center"><b>Cart is empty...</b></h1>
+       <br>
+       <h3 class="text-center shop-now" ><a href="/shop">Shop now</a></h3>
+     </div>
+
   </div>
 </section>
 
+
+
+<!-- Add this code within your EJS template -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
+  // Function to delete a product
+  const deleteProduct = async (itemId) => {
+  try {
+    const cartTable = document.getElementById('cart-table');
+    const emptyCart = document.getElementById('empty-cart');
+    const response = await axios.patch(`/deleteCartProduct?id=${itemId}`);
+    const totalCartPrice = document.getElementById("total")
+    // Check the response status
+    if (response.data.success) {
+      const item = document.getElementById(`cart-row-${itemId}`);
+      if (item) {
+        item.style.display = 'none';
+
+        // Check if all cart rows are hidden
+        const cartRows = document.querySelectorAll('[id^="cart-row-"]');
+        let allHidden = true;
+        cartRows.forEach((row) => {
+          if (row.style.display !== 'none') {
+            allHidden = false;
+          }
+        });
+
+        // Hide the cart table and show the "Cart is empty" message if all rows are hidden
+        if (allHidden) {
+          cartTable.style.display = 'none';
+          emptyCart.style.display = 'block';
+        }
+
+        // Update the total cart price with the new grand total
+        const newTotal = response.data.grandTotal;
+        totalCartPrice.innerHTML = `₹ ${newTotal}`;
+      }
+    }
+  } catch (error) {
+    console.error('Error deleting product:', error);
+  }
+}
+
+
   function increaseQuantity(productId, count, event) {
     event.preventDefault();
     $.ajax({

@@ -33,6 +33,15 @@ const orderSchema = new mongoose.Schema({
         type : String,
         required : true
     },
+    walletUsed : {
+        type : Number,
+        required : false
+    },
+
+    amountPayable : {
+        type : Number,
+        required : false
+    },
     orderStatus : {
         type : String,
         default : 'Pending'

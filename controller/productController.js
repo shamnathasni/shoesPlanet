@@ -19,7 +19,7 @@ const loadproducts=async(req,res)=>{
         const productCount = await Product.find({}).count()
         const productData=await Product.find(condition).populate('category')
         .skip((page-1)*(5)).limit(5)
-        res.render("admin/products",{productData,
+        res.render("admin/products",{message:req.flash("err"),productData,
         currentPage:page,
         hasNextpage:page*5<productCount,
         haspreviouspage:page>1,
@@ -40,7 +40,7 @@ const addproduct=async(req,res)=>{
     try {
         
         const category = await Category.find({status:true})
-        res.render("admin/addproduct",{category})
+        res.render("admin/addproduct",{category })
         
     } catch (error) {
         
@@ -51,57 +51,61 @@ const addproduct=async(req,res)=>{
     
 }
 
-const postAddProduct=async(req,res)=>{
-    
+const postAddProduct = async (req, res) => {
     try {
-        // const { name,category,description,price,availability}=req.body
-        // console.log(req.file);
-        for(let file of req.files) {
-            if( 
-                file.mimetype !== 'image/jpg' &&
-                file.mimetype !== 'image/jpeg' &&
-                file.mimetype !== 'image/png' &&
-                file.mimetype !== 'image/gif'
-                ){
-                    req.flash('err','Check the image type')
-                    return res.redirect('/admin/addproducts')
-                }
-            }
-            console.log(req.files,"this is files");
-            const image = []
-            for(let items of req.files){
-                
-                    image.push(items.filename)
-                }
-                const { name,category,description,price,availability}=req.body
-                // if(req.files && req.files.length >0){
-                //     for(let i=0;i<req.files.length;i++){
-                //     const filePath = path.join(__dirname,'../public/productImages',req.files[i].filename)
-                //         await sharp(req.files[i].path).resize({width:250,height:250}).toFile(filePath)
-                //         image.push(req.files[i].filename)
-                //     }
-                // }
-
-
-        const newproduct=new Product({
-            
+        const {
             name,
             category,
             description,
             price,
-            availability,  
-            image:image
+            availability,   
+        } = req.body
+        console.log( req.body);
+    
+        const existingProduct = await Product.findOne({
+
+            name: { $regex: new RegExp(`^${name}$`, "i") }
+
         })
-       
-        const savedProduct=await newproduct.save()
-        // console.log(savedProduct);
-        res.redirect("/admin/products") 
+        if (!existingProduct) {
+
+
+            let imageArr = []
+
+            if (req.files && req.files.length > 0) {
+
+                for (let i = 0; i < req.files.length; i++) {
+
+                    const filePath = path.join(__dirname, "../public/croppedImg", req.files[i].filename);
+
+                    await sharp(req.files[i].path)
+
+                        .resize({ width: 250, height: 250 })
+
+                        .toFile(filePath);
+
+                    imageArr.push(req.files[i].filename);
+                }
+            }
+        
+            const product = new Product({
+                name:name,
+                category: category,
+                description: description,
+                price: price,
+                availability: availability,
+                image: imageArr,
+            })
+            await product.save()
+            res.redirect('/admin/products')
+        } else {
+           req.flash({message:"this product is already exist"})
+            res.redirect('/admin/addProduct')
+        }
 
     } catch (error) {
         console.log(error.message);
-        res.redirect("/500")
-        
-    }
+    }
 }
 
 const deleteProduct = async(req,res)=>{

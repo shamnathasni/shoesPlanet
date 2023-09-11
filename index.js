@@ -52,6 +52,6 @@ const errorController = require("./controller/errorController")
 app.use("/500",errorController.get500)
 app.use(errorController.get404)
 
-app.listen(3333,()=>{
-    console.log("server is running on , http://localhost:3333/");
+app.listen(3000,()=>{
+    console.log("server is running on , http://localhost:3000/");
 })
