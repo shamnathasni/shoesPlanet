@@ -11,9 +11,6 @@ const userAuth = require("../middleware/userAuth.js")
 const session=require("express-session")
 const config=require("../config/config")
 
-user_route.set("view engine", "ejs")
-user_route.set("views", "views")
-
 user_route.use(session({secret:config.sessionSecret}))
 
 user_route.get("/", userController.loadhome)
