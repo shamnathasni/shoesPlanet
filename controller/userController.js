@@ -436,19 +436,14 @@ const loadInvoice = async ( req,res ) => {
   try {
     const { orderId } = req.query
     const { user_id } = req.session
-    console.log(orderId+"$$$$$");
-    console.log(user_id+"2");
     const userData = await User.findOne({_id : user_id})
-    console.log(userData+"UUUUU");
     const orderData = await Order.findOne({ _id : orderId }).populate("products.productId")
-    console.log(orderData+"OOOOO");
     const date = new Date()
     const data = {
       user : userData ,
       order : orderData ,
       date,
     }
-console.log(data+"DDDDDD");
     const filepathName = path.resolve(__dirname, "../views/user/invoice.ejs");
     const html = fs.readFileSync(filepathName).toString();
     const ejsData = ejs.render(html, data);
