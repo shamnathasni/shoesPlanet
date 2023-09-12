@@ -198,7 +198,7 @@ const loadOrderDetails = async(req,res)=>{
 
         const orderId = req.session.user_id
         const orderlist = await Order.find({userId:orderId}).populate("products.productId").populate("address")
-        console.log(orderlist[0].products.productId);
+        
         res.render("user/orderDetails",{orderlist})
     } catch (error) {
         console.log(error.message);
