@@ -1,76 +1,78 @@
 <%-include("../layouts/userlayout/header.ejs") %>
 <%-include("../layouts/userlayout/nav.ejs") %>
-<div class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg');">
-    <div class="container">
-      <div class="row no-gutters slider-text align-items-center justify-content-center">
-        <div class="col-md-9 ftco-animate text-center">
-            <p class="breadcrumbs"><span class="mr-2"><a href="/home">Home</a></span> <a href="/shop"><span>Shop</span></a></p>
-          <h1 class="mb-0 bread">Single product</h1>
-        </div>
+
+<style>
+.product-image {
+  max-width: 80%; /* Adjust the maximum width as needed */
+  height: 100%; 
+ /* This ensures that the image maintains its aspect ratio */
+}
+</style>
+
+
+<div class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg'); height: 300px;">
+  <div class="container">
+    <div class="row no-gutters slider-text align-items-center justify-content-center">
+      <div class="col-md-9 ftco-animate text-center">
+        <p class="breadcrumbs"><span class="mr-2"><a href="/home">Home</a></span> <a href="/shop"><span>Shop</span></a></p>
+        <h1 class="mb-0 bread">Single Product</h1>
       </div>
     </div>
   </div>
+</div>
 
-    <section class="ftco-section">
-        <div class="container">
-            <div class="row">
-            <% for(let i=0;i< productData.image.length;i++) {%> 
-              <div class="col-lg-6 mb-5 ftco-animate">
-                <a href="/productImages/<%=productData.image[i]%>" class="image-popup prod-img-bg"><img src="/productImages/<%=productData.image[i]%>" class="img-fluid" alt="Colorlib Template"></a>
-              </div>
-              <%}%>
-              <div class="col-lg-6 product-details pl-md-5 ftco-animate">
-                  <h3><%=productData.name%></h3>
-                  <div class="rating d-flex">
-                          <p class="text-left mr-4">
-                              <a href="#" class="mr-2">5.0</a>
-                              <a href="#"><span class="ion-ios-star-outline"></span></a>
-                              <a href="#"><span class="ion-ios-star-outline"></span></a>
-                              <a href="#"><span class="ion-ios-star-outline"></span></a>
-                              <a href="#"><span class="ion-ios-star-outline"></span></a>
-                              <a href="#"><span class="ion-ios-star-outline"></span></a>
-                          </p>
-                          <p class="text-left mr-4">
-                              <a href="#" class="mr-2" style="color: #000;">100 <span style="color: #bbb;">Rating</span></a>
-                          </p>
-                          <p class="text-left">
-                              <a href="#" class="mr-2" style="color: #000;">500 <span style="color: #bbb;">Sold</span></a>
-                          </p>
-                      </div>
-                  <p class="price"><span>₹<%=productData.price%></span></p>
-                  <p><%=productData.description%></p>
-                      
-                      <div class="row mt-4">
-                          <div class="col-md-6">
-                              <div class="form-group d-flex">
-                    <div class="select-wrap">
-                
-
-                  </div>
-                  </div>
-                          </div>
-                          <div class="w-100"></div>
-                          <div class="input-group col-md-6 d-flex mb-3">
-                  
-                </div>
-                <div class="w-100"></div>
-                <div class="col-md-12">
-                    <p style="color: #ee0f0f;"><%=productData.availability%> piece left</p>
-                </div>
+<section class="ftco-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 mb-5 ftco-animate">
+        <% for (let i = 0; i < productData.image.length; i++) {%>
+          <a href="/productImages/<%= productData.image[i] %>" class="image-popup prod-img-bg">
+            <img src="/productImages/<%= productData.image[i] %>" class="img-fluid product-image" alt="Product Image">
+          </a>
+        <% } %>
+      </div>
+      <div class="col-lg-6 product-details pl-md-5 ftco-animate">
+        <h3><%= productData.name %></h3>
+        <div class="rating d-flex">
+          <p class="text-left mr-4">
+            <a href="#" class="mr-2">5.0</a>
+            <a href="#"><span class="ion-ios-star-outline"></span></a>
+            <a href="#"><span class="ion-ios-star-outline"></span></a>
+            <a href="#"><span class="ion-ios-star-outline"></span></a>
+            <a href="#"><span class="ion-ios-star-outline"></span></a>
+            <a href="#"><span class="ion-ios-star-outline"></span></a>
+          </p>
+          <p class="text-left mr-4">
+            <a href="#" class="mr-2" style="color: #000;">100 <span style="color: #bbb;">Ratings</span></a>
+          </p>
+          <p class="text-left">
+            <a href="#" class="mr-2" style="color: #000;">500 <span style="color: #bbb;">Sold</span></a>
+          </p>
+        </div>
+        <p class="price"><span>₹<%= productData.price %></span></p>
+        <p><%= productData.description %></p>
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="form-group d-flex">
+              <!-- Add any select input or form elements here -->
             </div>
-            <!-- <input type="hidden" id="custId" name="product" value="<%=productData.id%>"> -->
-
-            <% if(productData.availability>0){%>
-              
-                <p><a class="btn btn-black py-3 px-5 mr-2" onclick="addToCart('<%=productData._id%>')">Add to Cart</a></p>
-              
-            <%}else{%>
-
-                <a style="color: rgb(241, 58, 58);" class="btn btn-danger mr-2"> out of Stock!!</a>
-
-            <%}%> 
+          </div>
+          <div class="col-md-6">
+            <div class="input-group d-flex mb-3">
+              <!-- Add any input elements here -->
+            </div>
+          </div>
         </div>
+        <div class="col-md-12">
+          <p style="color: #ee0f0f;"><%= productData.availability %> pieces left</p>
         </div>
+        <% if (productData.availability > 0) { %>
+          <p><a class="btn btn-black py-3 px-5 mr-2" onclick="addToCart('<%= productData._id %>')">Add to Cart</a></p>
+        <% } else { %>
+          <a style="color: rgb(241, 58, 58);" class="btn btn-danger mr-2">Out of Stock!!</a>
+        <% } %>
+      </div>
+    </div>
 
 
 

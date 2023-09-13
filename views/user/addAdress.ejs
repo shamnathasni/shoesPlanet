@@ -1,11 +1,19 @@
 <%- include("../layouts/userLayout/header.ejs")%>
 <%-include("../layouts/userlayout/nav.ejs") %>
 
+<style>
+  .billing-form .form-control {
+    color: #000!important;
+    font-weight: 500;
+  }
+</style>
+
 <section class="ftco-section">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-xl-10 ftco-animate">
-            <form action="/addAddress" method="post" class="billing-form">
+          <div id="errorMessages"></div>
+          <form action="/addAddress" method="post" class="billing-form" id="addressForm">
             <h3 class="mb-4 billing-heading">Address Details</h3>
           
             <div class="row align-items-end">
@@ -13,7 +21,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                       <label for="firstname">Name</label>
-                    <input type="text" name="name" class="form-control" placeholder="">
+                    <input type="text" id="name" name="name" class="form-control" placeholder="">
                     </div>
                 </div>
 
@@ -21,14 +29,14 @@
                 <div class="col-md-6">
                 <div class="form-group">
                     <label for="phone">Phone</label>
-                  <input type="text" name="mobile" class="form-control" placeholder="">
+                  <input type="text" id="mobile" name="mobile" class="form-control" placeholder="">
                 </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="emailaddress">Email Address</label>
-                    <input type="text" name="email" class="form-control" placeholder="">
+                    <input type="text" id="email" name="email" class="form-control" placeholder="">
                   </div>
                 </div>
 
@@ -36,13 +44,13 @@
                 <div class="col-md-6">
                     <div class="form-group">
                     <label for="streetaddress">houseName</label>
-                  <input type="text" name="houseName" class="form-control" placeholder="House number and street name">
+                  <input type="text" id="houseName" name="houseName" class="form-control" placeholder="House number and street name">
                 </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                     <label for="streetaddress">landmark</label>    
-                  <input type="text" name="landmark" class="form-control" placeholder="Appartment, suite, unit etc: (optional)">
+                  <input type="text" id="landmark" name="landmark" class="form-control" placeholder="Appartment, suite, unit etc: (optional)">
                 </div>
                 </div>
 
@@ -51,13 +59,13 @@
                   <div class="col-md-6">
                       <div class="form-group">
                       <label for="towncity">City</label>
-                    <input type="text" name="city" class="form-control" placeholder="">
+                    <input type="text" id="city" name="city" class="form-control" placeholder="">
                   </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                     <label for="towncity">state</label>
-                  <input type="text" name="state" class="form-control" placeholder="">
+                  <input type="text" id="state" name="state" class="form-control" placeholder="">
                 </div>
                 </div>
 
@@ -66,25 +74,15 @@
                   <div class="col-md-6">
                     <div class="form-group">
                         <label for="country">Country</label>
-                        <input type="text" name="country" class="form-control" placeholder="">
-                        <!-- <div class="select-wrap">
-                      <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                      <select name="" id="" class="form-control">
-                          <option value="">France</option>
-                        <option value="">Italy</option>
-                        <option value="">Philippines</option>
-                        <option value="">South Korea</option>
-                        <option value="">Hongkong</option>
-                        <option value="">Japan</option>
-                      </select>
-                    </div> -->
+                        <input type="text" id="country" name="country" class="form-control" placeholder="">
+
                     </div>
                 </div>
                   
                   <div class="col-md-6">
                       <div class="form-group">
                           <label for="postcodezip">Postcode / ZIP *</label>
-                    <input type="text" name="pincode" class="form-control" placeholder="">
+                    <input type="text" id="pincode" name="pincode" class="form-control" placeholder="">
                   </div>
                   </div>
                  
@@ -92,16 +90,13 @@
               <div class="w-100"></div>
               <div class="col-md-12">
                 <div class="form-group mt-4">
-                   <!-- <div class="radio">
-                     <label class="mr-3"><input type="radio" name="optradio"> add new </label>
-                     <label><input type="radio" name="optradio"> edit</label>
-                   </div> -->
-                   <button type="submit" class="btn btn-primary btn-sm mr-3" style="width: 100px; height: 50px; ">Update</button>
+                  <button type="submit" class="btn btn-primary btn-sm mr-3" style="width: 100px; height: 50px;">Update</button>
                 </div>
               </div>
               </div>
         
         </form><!-- END -->
+        <div id="errorMessages"></div>
         </div>
       </div>
     </div>
@@ -109,3 +104,100 @@
 
 <%-include("../layouts/userlayout/footer.ejs") %>
 <%-include("../layouts/userlayout/footerNav.ejs") %>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("addressForm");
+      const errorMessages = document.getElementById("errorMessages");
+
+      form.addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent the form from submitting by default
+
+          console.log("Validation function is executing."); 
+          // Get input values
+          const name = document.getElementById("name").value;
+          const mobile = document.getElementById("mobile").value;
+          const email = document.getElementById("email").value;
+          const landmark = document.getElementById("landmark").value;
+          const houseName = document.getElementById("houseName").value;
+          const city = document.getElementById("city").value;
+          const state = document.getElementById("state").value;
+          const country = document.getElementById("country").value;
+          const pincode = document.getElementById("pincode").value;
+          // Get values for other fields as well
+
+          // Clear previous error messages
+          errorMessages.innerHTML = "";
+
+          // Perform validation
+          if (name === "" || mobile === "" || email === "" || landmark === "" || houseName === "" || city === "" || state === "" || country === "" || pincode === "") {
+            alert("Please fill in all required fields.");
+             return false;
+          }
+          if (!name) {
+              showError("Name is required");
+              return;
+          }
+
+          if (!mobile) {
+              showError("Mobile is required");
+              return;
+          }
+          if (!email) {
+              showError("Mobile is required");
+              return;
+          }
+          if (!landmark) {
+              showError("Mobile is required");
+              return;
+          }
+          if (!houseName) {
+              showError("houseName is required");
+              return;
+          }
+          if (!city) {
+              showError("city is required");
+              return;
+          }
+          if (!state) {
+              showError("state is required");
+              return;
+          }
+          if (!country) {
+              showError("country is required");
+              return;
+          }
+          if (!pincode) {
+              showError("pincode is required");
+              return;
+          }
+
+          // Validate email using regex
+          const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+          if (!email.match(emailPattern)) {
+              showError("Invalid email format");
+              return;
+          }
+
+          // Validate mobile number using regex
+          const mobilePattern = /^\d{10}$/;
+          if (!mobile.match(mobilePattern)) {
+              showError("Mobile number must be 10 digits");
+              return;
+          }
+
+          // Add more validation for other fields as needed
+
+          // If all validation passes, you can submit the form
+          form.submit();
+      });
+
+      function showError(message) {
+          const errorMessage = document.createElement("div");
+          errorMessage.textContent = message;
+          errorMessage.classList.add("alert", "alert-danger");
+          errorMessages.appendChild(errorMessage);
+      }
+  });
+</script>
+  
+  

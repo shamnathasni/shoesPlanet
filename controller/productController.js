@@ -5,35 +5,39 @@ const fs = require("fs")
 const path = require("path")
 const sharp = require("sharp")
 
-const loadproducts=async(req,res)=>{
-
+const loadproducts = async (req, res) => {
     try {
-        let page = Number(req.query.page)
-        
-        if( isNaN (page)||page<1){
-            page = 1
+        let page = Number(req.query.page);
+
+        if (isNaN(page) || page < 1) {
+            page = 1;
         }
 
-        const condition = {}
+        const condition = {};
 
-        const productCount = await Product.find({}).count()
-        const productData=await Product.find(condition).populate('category')
-        .skip((page-1)*(5)).limit(5)
-        res.render("admin/products",{message:req.flash("err"),productData,
-        currentPage:page,
-        hasNextpage:page*5<productCount,
-        haspreviouspage:page>1,
-        nextPage:page+1,
-        previousPage:page-1,
-        lastPage:Math.ceil(productCount / 5)
-        })
-   
+        const productCount = await Product.find({}).count();
+        const productData = await Product.find(condition)
+            .populate('category')
+            .skip((page - 1) * 5)
+            .limit(5)
+            .sort({ createdAt: -1 }); // Sort by createdAt in descending order (latest first)
+
+        res.render("admin/products", {
+            message: req.flash("err"),
+            productData,
+            currentPage: page,
+            hasNextpage: page * 5 < productCount,
+            haspreviouspage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(productCount / 5),
+        });
     } catch (error) {
-        
-        res.redirect("/500")
-        
+        res.redirect("/500");
+        console.log(error.message);
     }
-}
+};
+
 
 const addproduct=async(req,res)=>{
     

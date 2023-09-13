@@ -4,7 +4,7 @@ const Order = require("../models/orderModel")
 const User = require("../models/userModels")
 const Product = require("../models/productModel")
 
-const bcrypt=require("bcrypt")
+const bcrypt=require("bcryptjs")
 
 
 const loadAdminLogin=async(req,res)=>{

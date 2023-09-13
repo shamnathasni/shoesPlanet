@@ -48,8 +48,8 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card edit-profile-form">
-                    <div class="card-body text-center">
-                        <h2 class="card-title mb-4">Edit Profile</h2>
+                    <div class="card-body">
+                        <h2 class="card-title mb-4 text-center">Edit Profile</h2>
                         <form action="/editProfile" method="POST">
                             <!-- Editable fields -->
                             <div class="form-group">
@@ -65,7 +65,7 @@
                                 <input type="tel" id="mobile" name="mobile" value="<%= user.mobile %>" required>
                             </div>
                             <!-- Additional editable fields as needed -->
-                            <div class="mt-4 d-flex justify-content-center">
+                            <div class="mt-4 text-center">
                                 <button type="submit" class="btn btn-primary save-button">Save Changes</button>
                             </div>
                         </form>

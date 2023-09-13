@@ -6,12 +6,7 @@
         <div class="col-9">
             <div class="content-header">
                 <h2 class="content-title">Edit Product</h2>
-                <div>
-                    <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
-                </div>
             </div>
-        </div>
-        <div class="col-lg-6">
             <div class="card mb-4">
                 <div class="card-header">
                     <h4>Basic</h4>
@@ -19,76 +14,82 @@
                 <div class="card-body">
                     <form action="/admin/editproduct" method="post" enctype="multipart/form-data">
                         <div class="mb-4">
-                            <label for="Product_name" class="form-label">Name</label>
+                            <label for="product_name" class="form-label">Name</label>
                             <input type="text" placeholder="Type here" class="form-control" name="name" value="<%= product.name %>" />
-                          
                         </div>
                         <div class="mb-4">
-                            <label class="form-label">category</label>
-
-                            <select id="Category_name" class="form-control" name="category" value="<%= product.category.name%>" required>
-                                <%category.forEach((item)=> { %>  
-                                <option value="<%= item._id %>"><%= item.name %></option>
-                                <% }) %>  
-                                
+                            <label class="form-label">Category</label>
+                            <select id="category_name" class="form-control" name="category" required>
+                                <% category.forEach((item) => { %>
+                                    <option value="<%= item._id %>"><%= item.name %></option>
+                                <% }) %>
                             </select>
                         </div>
-                        </div>
                         <div class="mb-4">
-                            <label class="form-label">description</label>
-                            <input type="text" placeholder="Type here" class="form-control"  rows="4" name="description" value="<%= product.description %>" >
-                            
+                            <label class="form-label">Description</label>
+                            <input type="text" placeholder="Type here" class="form-control" name="description" rows="4" value="<%= product.description %>" >
                         </div>
-                        <div class="row">
+                        <div class="row gx-2">
                             <div class="col-lg-4">
                                 <div class="mb-4">
-                                    <label class="form-label">availability</label>
-                                    <div class="row gx-2">
-                                        <input  placeholder="available products" type="text" class="form-control" name="availability" value="<%= product.availability %>" />
-                                    </div>
+                                    <label class="form-label">Availability</label>
+                                    <input placeholder="Available products" type="text" class="form-control" name="availability" value="<%= product.availability %>" />
                                 </div>
                             </div>
-                        </div> 
-                        <div class="row">
                             <div class="col-lg-4">
                                 <div class="mb-4">
                                     <label class="form-label">Price</label>
-                                    <div class="row gx-2">
-                                        <input  placeholder="$" type="text" class="form-control" name="price" value="<%=product.price %>" />
-                                    </div>
+                                    <input placeholder="$" type="text" class="form-control" name="price" value="<%= product.price %>" />
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                         <div class="mb-4">
-                            <label class="form-label">image</label>
+                            <label class="form-label">Image</label>
                             <div class="row gx-2">
-                                <input  placeholder="choose file" type="file" multiple class ="form-control btn btn-primary" name="image"  />
+                                <input placeholder="Choose file" type="file" multiple class="form-control btn btn-primary" name="image" />
                                 <span class="input-group-append"></span>
                             </div>
                         </div>
-                        <input type="hidden" value="<%=product.id%>" name="productId">
+                        <input type="hidden" value="<%= product.id %>" name="productId">
                         <div class="row">
-                            <% for(let image of product.image) {%>
+                            <% for (let image of product.image) { %>
                                 <div class="edit-image" style="display: flex; flex-direction: column; justify-content: center; width: unset; ">
-                                    <div><img src="/productImages/<%=product.image%>"  style="width: auto; height: 100px; margin-inline: 10px; border: 1px solid rgb(193, 193, 193); border-radius: 15px;" alt="product image"></div>
-                                    <div class="mx-auto"><a id="delete" style="color: rgb(150, 9, 9);" class="badge danger" href="/admin/delete-image?id=<%= product._id %>&imageId=<%=product.image %>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <div><img src="/productImages/<%= image %>" style="width: auto; height: 100px; margin-inline: 10px; border: 1px solid rgb(193, 193, 193); border-radius: 15px;" alt="product image"></div>
+                                    <div class="mx-auto"><a id="delete" style="color: rgb(150, 9, 9);" class="badge danger" href="/admin/delete-image?id=<%= product._id %>&imageId=<%= image %>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
                                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
                                       </svg></a></div>
                                 </div>
-                            <%}%>
-                        </div>  
-                        <input type="hidden" value="<%= product._id%>" name="productId">
-                        <button type="submit" class="btn btn-md rounded font-sm hover-up">Update</button>
+                            <% } %>
+                        </div>
+                        <input type="hidden" value="<%= product._id %>" name="productId">
+                        <div class="d-grid gap-2 d-md-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                            <a href="/admin/products" class="btn btn-outline-danger ml-2">Cancel</a>
+                        </div>
                     </form>
                 </div>
-
-
             </div>
-            <!-- card end// -->
         </div>
-        
     </div>
 </section>
 
+<script>
+    // Get the anchor element by its ID or class (if available)
+    var deleteLink = document.getElementById("delete");
+
+    // Add a click event listener
+    deleteLink.addEventListener("click", function(event) {
+        // Show a confirmation dialog
+        var confirmation = confirm("Are you sure you want to delete this image?");
+
+        // If the user cancels, prevent the default action (navigation)
+        if (!confirmation) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+
 <%- include("../layouts/adminLayout/footer.ejs") %>
+

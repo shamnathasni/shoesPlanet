@@ -3,7 +3,7 @@ const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
 const Cart = require("../models/cartModel")
 const Order = require ("../models/orderModel")
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 const randomstring = require("randomstring");
 const otpGenerator = require("otp-generator");
@@ -64,7 +64,7 @@ const sendverifymail = async (name, email, otp) => {
       }
     });
   } catch(error) {
-    console.log(error.message);
+    res.redirect("/500")
 
   }
 };
@@ -104,7 +104,7 @@ const resetsendVerifymail = async (name, email, token) => {
       }
     });
   } catch (error) {
-    console.log(error.message);
+    res.redirect("/500")
   }
 };
 
@@ -136,10 +136,8 @@ const verifylogin = async (req, res) => {
           // req.flash("err","not verified")
           res.redirect("/otpReminder");
         } else {
-        
-          console.log(userData._id);
           req.session.user_id = userData._id;
-          res.render("user/home");
+          res.redirect("/home");
         }
       
       } else {
@@ -151,7 +149,7 @@ const verifylogin = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.log(error.message);
+    res.redirect("/500")
   }
 };
 
@@ -204,7 +202,7 @@ const insertUser = async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error.message);
+    res.redirect("/500")
   }
 };
 
@@ -212,7 +210,7 @@ const loadOtp = async(req,res)=>{
     try {
         res.render("user/otpReminder", { message : req.flash('err')})
     } catch (error) {
-        console.log(error.message);
+      res.redirect("/500")
 
     }
 }
@@ -248,7 +246,7 @@ const forgotpassword = async(req,res)=>{
   try {
     res.render("user/forgotPassword",{message:req.flash("err")})
   } catch (error) {
-    console.log(error.message);
+    res.redirect("/500")
   }
 }
 
@@ -275,7 +273,7 @@ const postforgotpassword = async(req,res)=>{
       res.redirect("/forgotPassword")
     }
   } catch (error) {
-    console.log(error.message);
+    res.redirect("/500")
   }
 }
 
@@ -293,7 +291,7 @@ console.log(otp);
     
   } catch (error) {
 
-    console.log(error.message);
+    res.redirect("/500")
   }
 }
 
@@ -303,7 +301,7 @@ const newPassword = async(req,res)=>{
     await User.findOneAndUpdate({email:req.session.forgotEmail,isBlocked:false},{$set:{password:password}})
     res.redirect("/login")
   } catch (error) {
-    console.log(error.message);
+    res.redirect("/500")
   }
 }
 
@@ -312,8 +310,8 @@ const newPassword = async(req,res)=>{
 
 const loadhome = async (req, res) => {
   try {
-    
-      res.render("user/home");
+      const productData = await Product.find({}).populate("category").limit(3)
+      res.render("user/home",{productData});
   
   } catch (error) {
     res.redirect("/500")
@@ -373,7 +371,7 @@ const loadSingleProduct = async (req, res) => {
 
     res.render("user/singleproduct",{productData,category});
   } catch (error) {
-    console.log(error.message);
+    res.redirect("/500")
   }
 };
 
@@ -391,9 +389,7 @@ const loadProfile = async(req,res) => {
 const loadEditProfile = async(req,res)=>{
   try {
     const profileId = req.params.id
-    console.log(req.params);
     const profile = await User.findOne({_id:profileId})
-    console.log(profile);
     res.render("user/editProfile",{user:profile})
   } catch (error) {
     res.redirect("/500")

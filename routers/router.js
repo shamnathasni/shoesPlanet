@@ -21,7 +21,6 @@ user_route.post("/login", userController.verifylogin)
 user_route.get("/forgotPassword",userController.forgotpassword)
 user_route.post("/forgotPassword",userController.postforgotpassword)
 user_route.post("/password-otp-veification",userController.forgotPasswordOtpVerification)
-
 user_route.post("/new-Password",userController.newPassword)
 
 
@@ -30,9 +29,7 @@ user_route.post("/signup",userController.insertUser)
 
 user_route.get("/otp",userController.loadOtp)
 user_route.post("/otp",userController.otpValidation)
-
 user_route.get("/otpReminder",userController.loadOtp)
-
 user_route.get('/resend',userController.resetsendVerifymail )
 
 
