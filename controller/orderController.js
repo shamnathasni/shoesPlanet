@@ -5,6 +5,9 @@ const Adress = require("../models/addrerssModel")
 const Product = require("../models/productModel")
 const cartHelper = require( '../helper/cartHelper' )
 const paymentHelper = require( '../helper/paymentHelper' )
+const moment = require('moment');
+moment.locale('en'); // Change 'en' to your desired locale
+const shortDateFormat = 'YYYY-MM-DD'; // Define your desired date format
 const { RAZORPAY_KEY_SECRET } = process.env
 const crypto = require( 'crypto' )
 const { log } = require("util")
@@ -101,15 +104,16 @@ console.log(walletAmount,"crttotal");
             orderStatus : orderStatus,
             address : address,
             walletUsed : walletUsed,
-            amountPayable : amountPayable
+            amountPayable : amountPayable,
+            date:new Date()
         })
         const ordered = await order.save()
             // Decreasing quantity
         for (const items of cartProducts[0].product) {
-                const {productId,quantity } = items
-                await Product.updateOne({_id:productId},{$inc:{availability:-quantity}})
+                const {product_Id,quantity } = items
+                console.log(product_Id,quantity +"Pppp");
+               await Product.updateOne({_id:product_Id},{$inc:{availability:-quantity}})
         }
-
             // Deleting cart
         await Cart.deleteOne({userId:user_id}) 
         if(  paymentMethod === 'COD' || amountPayable === 0 ){
@@ -133,9 +137,6 @@ console.log(walletAmount,"crttotal");
             const payment = await paymentHelper.razorpayPayment( ordered._id, amountPayable )
             res.json({ payment : payment , success : false  })
         } 
-
-        
-      
 
     } catch (error) {
         console.log(error.message);
@@ -197,9 +198,9 @@ const loadOrderDetails = async(req,res)=>{
     try {
 
         const orderId = req.session.user_id
-        const orderlist = await Order.find({userId:orderId}).populate("products.productId").populate("address")
+        const orderlist = await Order.find({userId:orderId}).populate("products.productId").populate("address").sort({date:-1})
         
-        res.render("user/orderDetails",{orderlist})
+        res.render("user/orderDetails",{orderlist,moment, shortDateFormat })
     } catch (error) {
         console.log(error.message);
         res.redirect("/500")

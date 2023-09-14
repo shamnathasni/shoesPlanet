@@ -3,7 +3,9 @@ const Category = require("../models/categoryModel");
 const Order = require("../models/orderModel")
 const User = require("../models/userModels")
 const Product = require("../models/productModel")
-
+const moment = require('moment');
+moment.locale('en'); 
+const shortDateFormat = 'YYYY-MM-DD'; 
 const bcrypt=require("bcryptjs")
 
 
@@ -202,8 +204,8 @@ const userlist = async(req,res)=>{
     try {
 
         const users = await User.find({})
-console.log(users);
-        res.render("admin/userlist",{users})
+
+        res.render("admin/userlist",{users,moment, shortDateFormat })
         
     } catch (error) {
 
