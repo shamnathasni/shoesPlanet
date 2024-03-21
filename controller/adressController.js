@@ -27,7 +27,6 @@ const postloadAddAdress = async(req,res) => {
        
        
         const { name , mobile , email , landmark ,  houseName , city , state , country , pincode ,  } = req.body
-console.log(req.body);
             const newAdress = new Adress({
                 user : req.session.user_id ,
                  name :name , 
@@ -49,7 +48,7 @@ console.log(req.body);
 
     } catch (error) {
         console.log(error.message);
-        res.redirect("/500")
+       
 
     }
 }

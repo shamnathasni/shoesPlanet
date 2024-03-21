@@ -3,14 +3,25 @@ const Category = require("../models/categoryModel");
 const { name } = require("ejs");
 const fs = require("fs")
 const path = require("path")
+<<<<<<< HEAD
 const Jimp = require('jimp');
+=======
+const sharp = require("sharp")
+>>>>>>> 954d0a42518927cb3a219cc62531271f0ca2f771
 
 const loadproducts = async (req, res) => {
     try {
         let page = Number(req.query.page);
+<<<<<<< HEAD
         if (isNaN(page) || page < 1) {
             page = 1;
         }  
+=======
+
+        if (isNaN(page) || page < 1) {
+            page = 1;
+        }
+>>>>>>> 954d0a42518927cb3a219cc62531271f0ca2f771
 
         const condition = {};
 
@@ -36,6 +47,10 @@ const loadproducts = async (req, res) => {
         console.log(error.message);
     }
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 954d0a42518927cb3a219cc62531271f0ca2f771
 
 
 const addproduct=async(req,res)=>{  

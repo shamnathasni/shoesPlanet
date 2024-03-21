@@ -1,4 +1,4 @@
-<%- include("../layouts/userLayout/header.ejs")%>
+<%- include("../layouts/userlayout/header.ejs")%>
 <%-include("../layouts/userlayout/nav.ejs") %>
 
 
@@ -7,12 +7,13 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-8 ftco-animate">
-                <div class="row mt-3 pl-lg-5 profile-buttons p-2">
-                    <a class="btn text-primary fw-bold " href="/addAddress">Add Address</a>
+                <h3 class=" billing-heading" style="text-align: center;"><strong>Address Details</strong> </h3>
+
+                <div class="row mt-3 justify-content-center pl-lg-5 profile-buttons p-2">
+                    <a class="btn text-primary fw-bold " style="text-align: center; font-size: larger; " href="/addAddress">Add Address</a>
                 </div>
-                <h3 class="mb-4 billing-heading">Address Details</h3>
                 <% if(data&&data.length>0) {%>
-                <%for(let items of data) {%>
+                    <%for(let items of data) {%>
                 <div class="card">
                     <div class="card-body" id="adressdiv-<%=items._id%>">
                         <div class="row" >
@@ -40,8 +41,7 @@
                 </div>
              <%}%>
             </div>
-            <%} else {%>
-                <h1 style="text-align: center;" >Add New Address</h1>
+           
             <%}%>
         </div>
     </div>
@@ -63,4 +63,4 @@ async function removeAdress(userid) {
 </script>
 
 <%-include("../layouts/userlayout/footer.ejs") %>
-<%-include("../layouts/userlayout/footerNav.ejs") %>
+

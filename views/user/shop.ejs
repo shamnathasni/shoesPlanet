@@ -39,7 +39,7 @@ form.example::after {
   display: table;
 }
 </style>
-<section class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg');">
+<section class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg'); height: 3px;">
   <div class="container">
     <div class="row no-gutters slider-text align-items-center justify-content-center">
       <div class="col-md-9 ftco-animate text-center">
@@ -88,7 +88,7 @@ form.example::after {
                 </div>
                 <h3><a href="#"><%= product.name %></a></h3>
                 <div class="pricing">
-                  <p class="price"><span>₹<%= product.price %></span></p>
+                  <p class="price"><span>₹ <strong><%= product.price %></strong></span></p>
                 </div>
                 <p class="bottom-area d-flex px-3" onclick="addToCart('<%=product._id%>')" >
                   <a  class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>

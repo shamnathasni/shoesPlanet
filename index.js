@@ -16,7 +16,10 @@ app.use(flash())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
+// Date format
 const shortDateFormat = "MMM Do YY"
+
+// Middle ware for moment date
 app.locals.moment = moment;
 app.locals.shortDateFormat = shortDateFormat;
 

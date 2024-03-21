@@ -32,21 +32,48 @@
   color: darkblue;
 }
 
+.empty-order-list {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    /* background-color: #666262; */
+    border: 5px solid #666262;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: large;
+    color: #080707; 
+  }
+
+  .empty-order-list p {
+    margin: 10px 0;
+  }
+
 </style>
 
 
-<section class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg');">
+<section class="hero-wrap hero-bread" style="background-image: url('/productImages/bg_6.jpg'); height: 3px;">
   <div class="container">
     <div class="row no-gutters slider-text align-items-center justify-content-center">
       <div class="col-md-9 ftco-animate text-center">
-      
         <h1 class="mb-0 bread">Order Details</h1>
       </div>
     </div>
   </div>
 </section>
-  <!-- Your existing navigation content -->
 
+<% if (orderlist.length === 0) { %>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="empty-order-list">
+          <p>Your order list is empty.</p>
+          <p>Start shopping now and add items to your cart.</p>
+          <a href="/shop">Shop Here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } else { %>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12">
@@ -54,8 +81,9 @@
           <% for (let order of orderlist) { %>
          
           <div class="card mt-4" style="font-weight: 700;">
-            <div class="card-header" style="background-color: rgb(102, 102, 102); color: #fff;">
-              <strong>Order ID: <%= order._id %></strong>
+            <div class="card-header d-flex justify-content-between" style="background-color: rgb(102, 102, 102); color: #fff;">
+            <div><strong>Order ID: <%= order._id %></strong></div>
+            <div><strong>Date: <%= moment().format('YYYY-MM-DD') %></strong></div>
             </div>
             <div class="card-body">
               <p>Amount: <%= order.totalPrice %></p>
@@ -86,13 +114,17 @@
               </table>
             </div>
             <div class="card-footer" style="display: inline-flex; justify-content: space-between;">
+
+
+
               
               <button class="btn btn-info" value="/invoice?orderId=<%=order._id  %>">
+
                 <a href="/invoice?orderId=<%=order._id  %>" style="text-decoration: none; color: white;" class="invoice-btn">
 
               Download Invoice</a></button>
               <% if ( order.orderStatus === "Delivered" )  {%>               
-                <button class="btn btn-primary"  value="/orderCancel?orderId=<%=order._id%>">return</button>
+                <button class="btn btn-primary" style="background-color: #f2f2f2;"><a href="/shop">Shop More</a></button>
                 <% } else if( order.orderStatus === "Cancelled" ) { %>
                   <button class="btn btn-danger" >Cancelled</button>              
                   <%} else {%>
@@ -105,7 +137,7 @@
       </div>
     </div>
   </div>
-
+<%}%>
 
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -129,7 +161,7 @@
 </script>
 
 
-<%-include("../layouts/userlayout/footerNav.ejs") %>
+
 <%-include("../layouts/userlayout/footer.ejs") %>
 
 

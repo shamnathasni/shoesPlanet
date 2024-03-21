@@ -1,7 +1,35 @@
 <%-include("../layouts/userlayout/header.ejs") %>
 <%-include("../layouts/userlayout/nav.ejs") %>
 <style>
-/* styles.css */
+/* CSS for the empty order list message */
+.empty-order-list {
+  text-align: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.empty-order-list p {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.empty-order-list a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #d3d288;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.empty-order-list a:hover {
+  background-color: #d3d288;
+}
+
 body {
   background-color: #f7f7f7;
   font-family: Arial, sans-serif;
@@ -102,7 +130,7 @@ button{
 
 </style>
 
-<div class="hero-wrap hero-bread" style="background-image: url('productImages/bg_6.jpg');">
+<div class="hero-wrap hero-bread" style="background-image: url('productImages/bg_6.jpg'); height: 2px;">
   <div class="container">
     <div class="row no-gutters slider-text align-items-center justify-content-center">
       <div class="col-md-9 ftco-animate text-center">
@@ -112,7 +140,7 @@ button{
     </div>
   </div>
 </div>
-
+<% if(cart && cart.length > 0) {%>
 <div class="container-all col-12">
   <div class="row">
     <div class="left-content col-md-6">
@@ -190,6 +218,7 @@ button{
       <ul class="list pl-2">
         
         <% let sum = 0 %> <% cart[0].product.forEach((carts)=>{ %>
+
         <li>
 
           <div class="row pl-2 d-flex justify-content-between" style="width: 100%; color: rgb(75, 75, 75);">
@@ -268,12 +297,21 @@ button{
     </div>
   </div>
 </div>
-
-
-
-        </section>
-    </form>
-
+</section>
+</form>
+<% } else {  %>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="empty-order-list">
+         
+          <p>Start shopping now and add items to your cart.</p>
+          <a href="/shop">Shop Here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } %>
     <!-- Address Modal -->
     <div class="modal fade mt-5" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
       
