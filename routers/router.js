@@ -18,7 +18,7 @@ user_route.use(session({
     resave: false, // Don't save session if unmodified
     saveUninitialized: false,
     store: MongoStore.create({ 
-        mongoUrl: 'mongodb://localhost:27017/your_database_name',
+        mongoUrl:process.env.DATABASE_URL,
       }) // Don't create session until something is stored
 }));
 
