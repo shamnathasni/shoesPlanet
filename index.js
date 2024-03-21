@@ -10,14 +10,14 @@ const express=require("express")
 const app= express()
 const flash = require("connect-flash")
 const path=require("path") 
-
+const nocache=require("nocache")
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const shortDateFormat = "MMM Do YY"
 
 app.use(flash())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-
-// Date format
-const shortDateFormat = "MMM Do YY"
 
 // Middle ware for moment date
 app.locals.moment = moment;
@@ -26,13 +26,16 @@ app.locals.shortDateFormat = shortDateFormat;
 app.use(express.static(path.join(__dirname,"public")))
 app.set("view engine", "ejs")
 app.set("views", "views")
-const nocache=require("nocache")
+
 app.use(nocache())
-const session=require("express-session")
+
 app.use(session({
   secret: 'shoesplanet-1',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: MongoStore.create({ 
+    mongoUrl: 'mongodb://localhost:27017/your_database_name',
+  })
 }));
 
 app.use((req,res,next)=>{

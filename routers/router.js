@@ -8,14 +8,18 @@ const orderController = require("../controller/orderController")
 
 const userAuth = require("../middleware/userAuth.js")
 
-const session=require("express-session")
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const config=require("../config/config")
 
 
 user_route.use(session({
     secret: config.sessionSecret,
     resave: false, // Don't save session if unmodified
-    saveUninitialized: false // Don't create session until something is stored
+    saveUninitialized: false,
+    store: MongoStore.create({ 
+        mongoUrl: 'mongodb://localhost:27017/your_database_name',
+      }) // Don't create session until something is stored
 }));
 
 
