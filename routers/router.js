@@ -12,7 +12,12 @@ const session=require("express-session")
 const config=require("../config/config")
 
 
-user_route.use(session({secret:config.sessionSecret}))
+user_route.use(session({
+    secret: config.sessionSecret,
+    resave: false, // Don't save session if unmodified
+    saveUninitialized: false // Don't create session until something is stored
+}));
+
 
 user_route.get("/", userController.loadhome)
 user_route.get("/login", userController.loginload)
