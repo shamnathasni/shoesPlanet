@@ -30,12 +30,10 @@ const nocache=require("nocache")
 app.use(nocache())
 const session=require("express-session")
 app.use(session({
-      secret: 'aaaa',
-      resave: false,
-      saveUninitialized: false
-      
-    })
-  );
+  secret: 'shoesplanet-1',
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.use((req,res,next)=>{
   res.locals.userLoggedIn = req.session
