@@ -3,42 +3,43 @@ const Category = require("../models/categoryModel");
 const { name } = require("ejs");
 const fs = require("fs")
 const path = require("path")
-const sharp = require("sharp")
+const Jimp = require('jimp');
 
-const loadproducts=async(req,res)=>{
-
+const loadproducts = async (req, res) => {
     try {
-        let page = Number(req.query.page)
-        
-        if( isNaN (page)||page<1){
-            page = 1
-        }
+        let page = Number(req.query.page);
+        if (isNaN(page) || page < 1) {
+            page = 1;
+        }  
 
-        const condition = {}
+        const condition = {};
 
-        const productCount = await Product.find({}).count()
-        const productData=await Product.find(condition).populate('category')
-        .skip((page-1)*(5)).limit(5)
-        res.render("admin/products",{message:req.flash("err"),productData,
-        currentPage:page,
-        hasNextpage:page*5<productCount,
-        haspreviouspage:page>1,
-        nextPage:page+1,
-        previousPage:page-1,
-        lastPage:Math.ceil(productCount / 5)
-        })
-   
+        const productCount = await Product.find({}).count();
+        const productData = await Product.find(condition)
+            .populate('category')
+            .skip((page - 1) * 5)
+            .limit(5)
+            .sort({ createdAt: -1 }); // Sort by createdAt in descending order (latest first)
+
+        res.render("admin/products", {
+            message: req.flash("err"),
+            productData,
+            currentPage: page,
+            hasNextpage: page * 5 < productCount,
+            haspreviouspage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(productCount / 5),
+        });
     } catch (error) {
-        
-        res.redirect("/500")
-        
+        res.redirect("/500");
+        console.log(error.message);
     }
-}
+};
 
-const addproduct=async(req,res)=>{
-    
-    try {
-        
+
+const addproduct=async(req,res)=>{  
+    try {  
         const category = await Category.find({status:true})
         res.render("admin/addproduct",{category })
         
@@ -46,9 +47,7 @@ const addproduct=async(req,res)=>{
         
         res.redirect("/500")
         
-    }
-    
-    
+    }   
 }
 
 const postAddProduct = async (req, res) => {
@@ -59,54 +58,47 @@ const postAddProduct = async (req, res) => {
             description,
             price,
             availability,   
-        } = req.body
-        console.log( req.body);
-    
+        } = req.body;
+
         const existingProduct = await Product.findOne({
-
             name: { $regex: new RegExp(`^${name}$`, "i") }
+        });
 
-        })
         if (!existingProduct) {
-
-
-            let imageArr = []
+            let imageArr = [];
 
             if (req.files && req.files.length > 0) {
-
                 for (let i = 0; i < req.files.length; i++) {
-
                     const filePath = path.join(__dirname, "../public/croppedImg", req.files[i].filename);
 
-                    await sharp(req.files[i].path)
-
-                        .resize({ width: 250, height: 250 })
-
-                        .toFile(filePath);
+                    const image = await Jimp.read(req.files[i].path);
+                    await image.resize(250, 250).writeAsync(filePath);
 
                     imageArr.push(req.files[i].filename);
                 }
             }
         
             const product = new Product({
-                name:name,
+                name: name,
                 category: category,
                 description: description,
                 price: price,
                 availability: availability,
                 image: imageArr,
-            })
-            await product.save()
-            res.redirect('/admin/products')
+            });
+
+            await product.save();
+            res.redirect('/admin/products');
         } else {
-           req.flash({message:"this product is already exist"})
-            res.redirect('/admin/addProduct')
+            req.flash({ message: "This product already exists" });
+            res.redirect('/admin/addProduct');
         }
 
     } catch (error) {
         console.log(error.message);
-    }
-}
+        res.redirect("/500");
+    }
+};
 
 const deleteProduct = async(req,res)=>{
     
